@@ -19,6 +19,9 @@ Customer message
         → Watson Orchestrate returns response to user
 ```
 
+> [!NOTE]
+> For complete end-to-end instructions on IBM Cloud container deployment, watsonx Orchestrate Agent Builder setup, and secret management via IBM Cloud Secrets Manager, refer to the full [IBM Cloud Deployment Guide](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/ibm-cloud-deployment-guide.md).
+
 ---
 
 ## Step 1 — Import the OpenAPI Specification

@@ -70,7 +70,9 @@ External services per agent:
   ChromaDB (local)         — RAG knowledge base
   Watson Orchestrate       — Skill orchestration (Phase 3)
   IBM BOB                  — Ticket automation (Phase 3)
-```
+
+**IBM Cloud Deployment Strategy**:
+For full granular step-by-step instructions on containerizing FastAPI (Python 3.14), deploying embedded ChromaDB Vector DB on IBM Cloud Code Engine, managing secrets via IBM Cloud Secrets Manager, and importing agent skills into watsonx Orchestrate, see [IBM Cloud Deployment Guide](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/ibm-cloud-deployment-guide.md).
 
 ---
 

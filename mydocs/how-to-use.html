@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How to Use — Telecom Outage Resolution BOB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #0b0f19;
+    --bg-card: #111827;
+    --bg-card-hover: #1f293d;
+    --border-color: #1f2937;
+    --accent-blue: #0f62fe;
+    --accent-cyan: #11abe1;
+    --accent-teal: #00d2b5;
+    --accent-purple: #8a3ffc;
+    --accent-green: #24a148;
+    --accent-red: #da1e28;
+    --accent-yellow: #f1c21b;
+    --text-primary: #f4f4f5;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  /* Header / Hero */
+  header {
+    background: linear-gradient(135deg, rgba(15, 98, 254, 0.15) 0%, rgba(138, 63, 252, 0.1) 100%);
+    border: 1px solid rgba(15, 98, 254, 0.3);
+    border-radius: 16px;
+    padding: 36px 32px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(17, 171, 225, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--accent-cyan);
+  }
+  .badge.purple { color: #c697ff; border-color: rgba(138, 63, 252, 0.4); }
+  .badge.green { color: #6fdc8c; border-color: rgba(36, 161, 72, 0.4); }
+
+  header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  header p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 800px;
+  }
+
+  /* Grid Layout */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s ease;
+  }
+  .card:hover {
+    border-color: rgba(15, 98, 254, 0.5);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(15, 98, 254, 0.2);
+    color: var(--accent-cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* Live Interactive Agent Simulation Section */
+  .simulation-container {
+    background: #0d1322;
+    border: 1px solid rgba(15, 98, 254, 0.4);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 40px;
+  }
+
+  .sim-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .sim-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .input-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .sim-input {
+    flex: 1;
+    background: #161e31;
+    border: 1px solid #2d3954;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .sim-input:focus {
+    border-color: var(--accent-blue);
+  }
+
+  .btn {
+    background: var(--accent-blue);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn:hover { background: #0353e9; }
+  .btn:active { transform: scale(0.98); }
+
+  /* 7-Agent Node Stepper Display */
+  .nodes-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 1000px) { .nodes-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 600px) { .nodes-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .node-card {
+    background: #161e31;
+    border: 1px solid #25334d;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+  }
+  .node-card.idle { opacity: 0.6; }
+  .node-card.running {
+    border-color: var(--accent-cyan);
+    background: rgba(17, 171, 225, 0.15);
+    box-shadow: 0 0 12px rgba(17, 171, 225, 0.4);
+    animation: pulse 1.5s infinite;
+  }
+  .node-card.completed {
+    border-color: var(--accent-green);
+    background: rgba(36, 161, 72, 0.15);
+    opacity: 1;
+  }
+
+  @keyframes pulse {
+    0%, 100% { border-color: var(--accent-cyan); }
+    50% { border-color: var(--accent-blue); }
+  }
+
+  .node-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .node-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .node-status {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  /* Output Preview Box */
+  .output-box {
+    background: #090d16;
+    border: 1px solid #1f293d;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #e4e4e7;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+
+  /* Step-by-Step Execution Accordion / Tabs */
+  .flow-step {
+    border-left: 3px solid var(--accent-blue);
+    padding-left: 20px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .flow-step::before {
+    content: '';
+    position: absolute;
+    left: -7px; top: 0;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+  }
+
+  .step-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  code, pre {
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  pre {
+    background: #090d16;
+    border: 1px solid #1f293d;
+    border-radius: 8px;
+    padding: 14px;
+    color: #a7f3d0;
+    overflow-x: auto;
+    margin-top: 8px;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border-color);
+    padding-top: 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header Section -->
+  <header>
+    <div class="badge-container">
+      <span class="badge">IBM Cloud Code Engine</span>
+      <span class="badge purple">watsonx Orchestrate</span>
+      <span class="badge green">FastAPI (Python 3.14)</span>
+      <span class="badge">React 19 + Vite 8</span>
+      <span class="badge purple">ChromaDB Vector DB</span>
+    </div>
+    <h1>How to Use — Telecom Outage Resolution BOB</h1>
+    <p>Interactive End-to-End Execution Guide & Agent Lifecycle Simulator from Frontend to Backend.</p>
+  </header>
+
+  <!-- Live Agent Pipeline Interactive Simulator -->
+  <div class="simulation-container">
+    <div class="sim-header">
+      <div class="sim-title">⚡ Interactive Agent Execution Simulator</div>
+      <span style="font-size: 12px; color: var(--accent-cyan); font-weight: 600;">Click "Run Simulation" to watch 7 agents execute</span>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="userMessage" class="sim-input" value="Fiber cut detected near Manhattan junction box XY, 4G network is down for all customers." />
+      <button class="btn" onclick="runSimulation()">
+        <span>Run Simulation</span>
+      </button>
+    </div>
+
+    <!-- 7 Agent Nodes -->
+    <div class="nodes-grid">
+      <div class="node-card idle" id="node-intent">
+        <div class="node-num">Agent 1</div>
+        <div class="node-name">Intent</div>
+        <div class="node-status" id="status-intent">Idle</div>
+      </div>
+      <div class="node-card idle" id="node-ticket">
+        <div class="node-num">Agent 2</div>
+        <div class="node-name">Ticket</div>
+        <div class="node-status" id="status-ticket">Idle</div>
+      </div>
+      <div class="node-card idle" id="node-rca">
+        <div class="node-num">Agent 3</div>
+        <div class="node-name">RCA (Vector DB)</div>
+        <div class="node-status" id="status-rca">Idle</div>
+      </div>
+      <div class="node-card idle" id="node-escalation">
+        <div class="node-num">Agent 4</div>
+        <div class="node-name">Escalation</div>
+        <div class="node-status" id="status-escalation">Idle</div>
+      </div>
+      <div class="node-card idle" id="node-parallel">
+        <div class="node-num">Agent 5</div>
+        <div class="node-name">Parallel Impact</div>
+        <div class="node-status" id="status-parallel">Idle</div>
+      </div>
+      <div class="node-card idle" id="node-resolution">
+        <div class="node-num">Agent 6</div>
+        <div class="node-name">Resolution</div>
+        <div class="node-status" id="status-resolution">Idle</div>
+      </div>
+      <div class="node-card idle" id="node-feedback">
+        <div class="node-num">Agent 7</div>
+        <div class="node-name">Feedback</div>
+        <div class="node-status" id="status-feedback">Idle</div>
+      </div>
+    </div>
+
+    <!-- Simulated Log Output -->
+    <div class="output-box" id="simOutput">
+      // Live execution logs will appear here upon running...
+    </div>
+  </div>
+
+  <!-- End-to-End Flow Walkthrough Section -->
+  <h2 style="font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 24px;">End-to-End Request Lifecycle: Frontend ➔ Backend ➔ Cloud</h2>
+
+  <div class="flow-step">
+    <div class="step-header">Step 1: Frontend User Request Initiation</div>
+    <div class="step-desc">The user submits a free-text outage complaint on the React 19 UI (<code>Dashboard.tsx</code>). The custom hook <code>useOrchestration.ts</code> opens an SSE connection stream to <code>POST /orchestrate/stream</code> on IBM Cloud Code Engine.</div>
+  </div>
+
+  <div class="flow-step">
+    <div class="step-header">Step 2: FastAPI Security Ingress & PII Masking</div>
+    <div class="step-desc">Before touching any agent logic, <code>PIIGuardrails.mask_input()</code> redacts sensitive customer data (phones, emails, credit cards), <code>InputGuardrails.validate()</code> checks for SQL/prompt injections, and <code>verify_orchestrate_key()</code> validates the <code>x-api-key</code> header.</div>
+  </div>
+
+  <div class="flow-step">
+    <div class="step-header">Step 3: 7-Agent Execution & Vector DB RAG Search</div>
+    <div class="step-desc">The Master Orchestrator coordinates the specialized agents:</div>
+    <pre>
+1. Intent Recognition   ➔ IBM NLU extracts entity="Manhattan", service="4G", priority="Critical"
+2. Ticket Classification➔ Generates INC-2026-042871, queue="Network_Ops", SLA=30 mins
+3. RCA Agent (Vector DB)➔ Queries ChromaDB vector store for top-5 historical incidents + watsonx.ai Granite 13B reasoning
+4. Parallel Execution   ➔ Concurrent asyncio.gather: Escalation Agent (Executive alert) + Parallel Impact Agent (50k users)
+5. Resolution Agent     ➔ Formulates step-by-step resolution plan & customer message
+6. Feedback Agent       ➔ Calculates CSAT score (0.92) & preventive action points
+    </pre>
+  </div>
+
+  <div class="flow-step">
+    <div class="step-header">Step 4: IBM BOB Ticket Automation & Cloudant Audit Write</div>
+    <div class="step-desc">IBM BOB workflow triggers on skill completion and automatically writes the full incident record into the Cloudant <code>tickets</code> database. Anonymized execution traces are committed to <code>audit_trail</code>.</div>
+  </div>
+
+  <div class="flow-step">
+    <div class="step-header">Step 5: SSE Streaming & React 19 UI Animation</div>
+    <div class="step-desc">FastAPI streams SSE chunk events back to the React UI. Pipeline node icons light up green in real time, confidence meters update, and final resolution steps render with copy-to-clipboard functionality.</div>
+  </div>
+
+  <!-- Deployment Overview Section -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">1</div>
+        FastAPI & ChromaDB Deployment
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Containerized Python 3.14 serverless backend on IBM Cloud Code Engine with embedded ChromaDB Vector DB.</p>
+      <pre>docker build -t icr.io/bob-telecom-poc/bob-backend:v1 ./bobCode
+docker push icr.io/bob-telecom-poc/bob-backend:v1
+
+ibmcloud ce app create --name bob-backend-api \
+  --image icr.io/bob-telecom-poc/bob-backend:v1 \
+  --port 8000 --min-scale 1</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">2</div>
+        watsonx Orchestrate Integration
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Imports <code>bobCode/openapi/skills_spec.json</code> into Skill Studio to expose agent REST endpoints as Orchestrate Skills.</p>
+      <pre>Skill Base URL: https://bob-backend-api...codeengine.appdomain.cloud
+Header Security: x-api-key = bob_hackathon_sec_key_2026
+Agent System Prompt: "You are the Telecom Outage Master Agent..."</pre>
+    </div>
+  </div>
+
+  <footer>
+    IBM BOB Hackathon 2026 — Telecom Outage Resolution BOB Project Document
+  </footer>
+
+</div>
+
+<script>
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function runSimulation() {
+    const message = document.getElementById('userMessage').value;
+    const output = document.getElementById('simOutput');
+    
+    // Reset nodes
+    const agents = ['intent', 'ticket', 'rca', 'escalation', 'parallel', 'resolution', 'feedback'];
+    agents.forEach(a => {
+      const card = document.getElementById(`node-${a}`);
+      const status = document.getElementById(`status-${a}`);
+      card.className = 'node-card idle';
+      status.innerText = 'Idle';
+    });
+
+    output.innerText = `[${new Date().toLocaleTimeString()}] Starting orchestration stream for message: "${message}"\n`;
+    output.innerText += `[SECURITY] Header x-api-key validated. PII Guardrails scanning...\n`;
+    await sleep(400);
+
+    // Agent 1: Intent
+    setNodeState('intent', 'running', 'Analyzing...');
+    output.innerText += `[INTENT_AGENT] Invoking IBM NLU... Extracted entity: Manhattan, service: 4G, priority: Critical (0.95)\n`;
+    await sleep(700);
+    setNodeState('intent', 'completed', 'Completed');
+
+    // Agent 2: Ticket
+    setNodeState('ticket', 'running', 'Routing...');
+    output.innerText += `[TICKET_AGENT] Generated Ticket INC-2026-042871 | Queue: Network_Operations | SLA: 30 mins\n`;
+    await sleep(600);
+    setNodeState('ticket', 'completed', 'Completed');
+
+    // Agent 3: RCA
+    setNodeState('rca', 'running', 'RAG Search...');
+    output.innerText += `[RCA_AGENT] Querying ChromaDB Vector DB... Found 5 historical incidents.\n`;
+    output.innerText += `[RCA_AGENT] Invoking watsonx.ai Granite 13B... Root cause: Main backhaul fiber cut at Junction Box_XY (0.89)\n`;
+    await sleep(900);
+    setNodeState('rca', 'completed', 'Completed');
+
+    // Agent 4 & 5 Concurrent
+    setNodeState('escalation', 'running', 'Evaluating...');
+    setNodeState('parallel', 'running', 'Calculating...');
+    output.innerText += `[CONCURRENT] asyncio.gather(EscalationAgent, ParallelAgent) executing...\n`;
+    await sleep(800);
+    output.innerText += `[ESCALATION_AGENT] Critical P1 detected -> Escalated to Executive on-call.\n`;
+    output.innerText += `[PARALLEL_AGENT] Impact calculated: 50,000 active subscribers, est revenue impact $50k+.\n`;
+    setNodeState('escalation', 'completed', 'Completed');
+    setNodeState('parallel', 'completed', 'Completed');
+
+    // Agent 6: Resolution
+    setNodeState('resolution', 'running', 'Formatting...');
+    output.innerText += `[RESOLUTION_AGENT] Generated resolution plan: 1. Reroute via microwave backup, 2. Dispatch repair crew.\n`;
+    await sleep(700);
+    setNodeState('resolution', 'completed', 'Completed');
+
+    // Agent 7: Feedback
+    setNodeState('feedback', 'running', 'Logging...');
+    output.innerText += `[FEEDBACK_AGENT] CSAT Target: 92% | Learning: Configure BGP auto-failover.\n`;
+    await sleep(500);
+    setNodeState('feedback', 'completed', 'Completed');
+
+    // Final IBM BOB Cloudant Write
+    output.innerText += `[IBM_BOB] Automatically wrote incident document to Cloudant DB "tickets".\n`;
+    output.innerText += `[AUDIT_LOGGER] Sanitised execution trace committed to Cloudant DB "audit_trail".\n`;
+    output.innerText += `[SUCCESS] Orchestration Stream Completed in 3.6s. React UI state updated.\n`;
+  }
+
+  function setNodeState(agent, state, statusText) {
+    const card = document.getElementById(`node-${agent}`);
+    const status = document.getElementById(`status-${agent}`);
+    card.className = `node-card ${state}`;
+    status.innerText = statusText;
+  }
+</script>
+
+</body>
+</html>

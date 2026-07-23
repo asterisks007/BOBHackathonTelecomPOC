@@ -40,6 +40,9 @@ OrchestrateRequest (message, session_id, customer_id)
 OrchestrationResult
 ```
 
+> [!NOTE]
+> This pipeline flow can be orchestrated locally via `MasterOrchestrator.run()` OR in production via **watsonx Orchestrate Agent Builder**, where watsonx Orchestrate serves as the Master Agent invoking each stage as a containerized skill. For the complete deployment guide, see [IBM Cloud Deployment Guide](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/ibm-cloud-deployment-guide.md).
+
 ---
 
 ## Conditional Branching Rules

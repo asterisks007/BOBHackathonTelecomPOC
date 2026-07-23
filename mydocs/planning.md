@@ -1301,6 +1301,11 @@ pytest tests/ -vv
 ## Team
  
 IBM BOB Hackathon 2026 - Telecom BOB Team
+
+## Deployment Documentation
+
+For comprehensive technical steps on deploying the solution to **IBM Cloud** (including IBM Cloud Code Engine containerization, watsonx Orchestrate agent skill integration, ChromaDB Vector DB setup, and IBM Cloud Secrets Manager credential management), refer to:
+- [IBM Cloud Deployment Guide](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/ibm-cloud-deployment-guide.md)
  
 ## License
  
