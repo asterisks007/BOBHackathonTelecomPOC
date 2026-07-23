@@ -1,5 +1,5 @@
 // Dashboard — main page composing all components
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChatInput } from '../components/ChatInput';
 import { AgentPipeline } from '../components/AgentPipeline';
 import { ResolutionPanel } from '../components/ResolutionPanel';
@@ -15,14 +15,16 @@ export function Dashboard() {
   const [result, setResult] = useState<Record<string, Record<string, unknown>>>({});
 
   // Track timeline entries as SSE events arrive
-  const prevStatuses = Object.keys(agentStatuses).length;
-  if (Object.keys(agentStatuses).length > prevStatuses) {
-    const latest = Object.entries(agentStatuses).slice(-1)[0];
-    if (latest) {
-      const [stage, event] = latest;
-      setTimeline(t => [...t, { stage, event, timestamp: new Date() }]);
+  useEffect(() => {
+    const entries = Object.entries(agentStatuses);
+    if (entries.length > 0) {
+      const [stage, event] = entries[entries.length - 1];
+      setTimeline(t => {
+        if (t.some(e => e.stage === stage)) return t;
+        return [...t, { stage, event, timestamp: new Date() }];
+      });
     }
-  }
+  }, [agentStatuses]);
 
   const handleSubmit = async (message: string) => {
     setTimeline([]);
