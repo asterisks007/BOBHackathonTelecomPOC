@@ -1,0 +1,1150 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Telecom Outage Resolution Copilot",
+    "description": "7-agent agentic AI system for telecom outage resolution. IBM BOB Hackathon 2026 POC.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/orchestrate": {
+      "post": {
+        "tags": [
+          "orchestration"
+        ],
+        "summary": "Run full 7-agent pipeline",
+        "description": "Accepts a free-text customer complaint and runs it through the full 7-agent pipeline: Intent \u2192 Ticket \u2192 RCA \u2192 Escalation+Parallel \u2192 Resolution \u2192 Feedback. Returns aggregated result.",
+        "operationId": "orchestrate_orchestrate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrchestrateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrchestrationResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orchestrate/stream": {
+      "post": {
+        "tags": [
+          "orchestration"
+        ],
+        "summary": "Run pipeline with SSE streaming",
+        "description": "Same as POST /orchestrate but streams per-agent progress events as Server-Sent Events. Each event: {stage, agent, status, confidence, partial_result}.",
+        "operationId": "orchestrate_stream_orchestrate_stream_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrchestrateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/intent": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Intent Recognition Agent",
+        "operationId": "_handler_agents_intent_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/ticket": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Ticket Classification Agent",
+        "operationId": "_handler_agents_ticket_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/rca": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Root Cause Analysis Agent",
+        "operationId": "_handler_agents_rca_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/escalation": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Escalation Agent",
+        "operationId": "_handler_agents_escalation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/parallel": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Parallel Analysis Agent",
+        "operationId": "_handler_agents_parallel_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/resolution": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Response Generation Agent",
+        "operationId": "_handler_agents_resolution_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/feedback": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Feedback Agent",
+        "operationId": "_handler_agents_feedback_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhook/orchestrate": {
+      "post": {
+        "tags": [
+          "watson-orchestrate"
+        ],
+        "summary": "Watson Orchestrate skill entry point",
+        "description": "Called by Watson Orchestrate when the Telecom Copilot skill is invoked. Runs the full 7-agent pipeline and writes the resulting ticket to Cloudant via IBM BOB.",
+        "operationId": "watson_orchestrate_webhook_webhook_orchestrate_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatsonSkillRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatsonSkillResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhook/health": {
+      "get": {
+        "tags": [
+          "watson-orchestrate",
+          "watson-orchestrate"
+        ],
+        "summary": "Watson Orchestrate integration health check",
+        "description": "Confirm the Watson Orchestrate webhook is reachable.",
+        "operationId": "watson_health_webhook_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Watson Health Webhook Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhook/tickets/{ticket_id}": {
+      "get": {
+        "tags": [
+          "watson-orchestrate",
+          "watson-orchestrate"
+        ],
+        "summary": "Retrieve a BOB-created ticket from Cloudant",
+        "description": "Return a ticket document from Cloudant by ticket_id.",
+        "operationId": "get_ticket_webhook_tickets__ticket_id__get",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ticket Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Ticket Webhook Tickets  Ticket Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "info"
+        ],
+        "summary": "Application info",
+        "description": "Return basic application metadata.",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "info"
+        ],
+        "summary": "Health check",
+        "description": "Return system health and dependency status.\n\nThe api_calls_used field tracks real IBM API calls consumed against the\n100-call/month Lite Plan budget.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "tags": [
+          "info"
+        ],
+        "summary": "Readiness probe",
+        "description": "Kubernetes/cloud readiness probe \u2014 returns 200 when app can serve traffic.",
+        "operationId": "ready_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AgentContext": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id",
+            "description": "Unique conversation session identifier"
+          },
+          "upstream_results": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Upstream Results",
+            "description": "Results from previously executed agents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id"
+        ],
+        "title": "AgentContext",
+        "description": "Carries upstream results and session state between agents."
+      },
+      "AgentMetadata": {
+        "properties": {
+          "execution_time_ms": {
+            "type": "number",
+            "title": "Execution Time Ms",
+            "description": "Wall-clock time in milliseconds"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "description": "Agent confidence score (0\u20131)",
+            "default": 0.0
+          },
+          "cache_hit": {
+            "type": "boolean",
+            "title": "Cache Hit",
+            "description": "True if result served from cache",
+            "default": false
+          },
+          "mock_used": {
+            "type": "boolean",
+            "title": "Mock Used",
+            "description": "True if IBM service was mocked",
+            "default": true
+          },
+          "model_used": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Used",
+            "description": "LLM model identifier if used"
+          }
+        },
+        "type": "object",
+        "required": [
+          "execution_time_ms"
+        ],
+        "title": "AgentMetadata",
+        "description": "Execution metadata attached to every agent response."
+      },
+      "AgentRequest": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id",
+            "description": "Unique request identifier (UUID recommended)"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "UTC timestamp of the request"
+          },
+          "customer_id": {
+            "type": "string",
+            "title": "Customer Id",
+            "description": "Anonymised customer identifier"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Payload",
+            "description": "Agent-specific input fields"
+          },
+          "context": {
+            "$ref": "#/components/schemas/AgentContext",
+            "description": "Session and upstream context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_id",
+          "customer_id",
+          "payload",
+          "context"
+        ],
+        "title": "AgentRequest",
+        "description": "Standardised input envelope accepted by every agent endpoint."
+      },
+      "AgentResponse": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id",
+            "description": "Echoed from AgentRequest"
+          },
+          "agent_name": {
+            "type": "string",
+            "title": "Agent Name",
+            "description": "Name of the agent that produced this response"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AgentStatus",
+            "description": "Execution outcome"
+          },
+          "result": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Result",
+            "description": "Agent-specific output fields"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/AgentMetadata",
+            "description": "Execution telemetry"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message",
+            "description": "Human-readable error details (never raw stack traces)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_id",
+          "agent_name",
+          "status",
+          "result",
+          "metadata"
+        ],
+        "title": "AgentResponse",
+        "description": "Standardised output envelope returned by every agent endpoint."
+      },
+      "AgentStatus": {
+        "type": "string",
+        "enum": [
+          "success",
+          "error",
+          "partial",
+          "fallback"
+        ],
+        "title": "AgentStatus",
+        "description": "Possible terminal states for an agent execution."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "use_mock": {
+            "type": "boolean",
+            "title": "Use Mock"
+          },
+          "services": {
+            "items": {
+              "$ref": "#/components/schemas/ServiceStatus"
+            },
+            "type": "array",
+            "title": "Services"
+          },
+          "api_calls_used": {
+            "type": "integer",
+            "title": "Api Calls Used",
+            "description": "Real IBM API calls consumed so far",
+            "default": 0
+          },
+          "api_calls_budget": {
+            "type": "integer",
+            "title": "Api Calls Budget",
+            "description": "Monthly Lite Plan call budget",
+            "default": 100
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version",
+          "use_mock",
+          "services"
+        ],
+        "title": "HealthResponse",
+        "description": "Response body for GET /health."
+      },
+      "OrchestrateRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id",
+            "description": "Session identifier for this conversation turn"
+          },
+          "customer_id": {
+            "type": "string",
+            "title": "Customer Id",
+            "description": "Anonymised customer identifier"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Message",
+            "description": "Free-text customer complaint"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "customer_id",
+          "message"
+        ],
+        "title": "OrchestrateRequest",
+        "description": "Top-level request to the master orchestration endpoint."
+      },
+      "OrchestrationResult": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "ticket_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Id"
+          },
+          "intent_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intent Summary"
+          },
+          "ticket_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Summary"
+          },
+          "rca_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rca Summary"
+          },
+          "escalation_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Escalation Summary"
+          },
+          "analysis_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Analysis Summary"
+          },
+          "resolution_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution Summary"
+          },
+          "feedback_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feedback Summary"
+          },
+          "total_execution_ms": {
+            "type": "number",
+            "title": "Total Execution Ms",
+            "default": 0.0
+          },
+          "agents_completed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Agents Completed"
+          },
+          "agents_failed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Agents Failed"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id"
+        ],
+        "title": "OrchestrationResult",
+        "description": "Aggregated result returned after the full 7-agent pipeline completes."
+      },
+      "ServiceStatus": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "mock_mode": {
+            "type": "boolean",
+            "title": "Mock Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "status",
+          "mock_mode"
+        ],
+        "title": "ServiceStatus",
+        "description": "Health status of a single dependency."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WatsonSkillRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id",
+            "description": "Watson Orchestrate session identifier"
+          },
+          "customer_id": {
+            "type": "string",
+            "title": "Customer Id",
+            "description": "Customer identifier from Watson Orchestrate context",
+            "default": "WO-CUSTOMER"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Message",
+            "description": "Customer complaint forwarded from Watson Orchestrate"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "Origination system identifier",
+            "default": "watson_orchestrate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "message"
+        ],
+        "title": "WatsonSkillRequest",
+        "description": "Payload received from Watson Orchestrate when a skill is invoked.\nMaps Watson Orchestrate skill input parameters to our OrchestrateRequest."
+      },
+      "WatsonSkillResponse": {
+        "properties": {
+          "ticket_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Id"
+          },
+          "severity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Severity"
+          },
+          "queue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Queue"
+          },
+          "root_cause_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Root Cause Summary"
+          },
+          "resolution_steps_count": {
+            "type": "integer",
+            "title": "Resolution Steps Count",
+            "default": 0
+          },
+          "customer_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Message"
+          },
+          "escalated": {
+            "type": "boolean",
+            "title": "Escalated",
+            "default": false
+          },
+          "sla_met": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sla Met"
+          },
+          "total_execution_ms": {
+            "type": "number",
+            "title": "Total Execution Ms",
+            "default": 0.0
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "success"
+          }
+        },
+        "type": "object",
+        "title": "WatsonSkillResponse",
+        "description": "Response returned to Watson Orchestrate after skill execution."
+      }
+    }
+  }
+}

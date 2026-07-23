@@ -1,0 +1,163 @@
+Telecom Knowledge Base — Resolution Patterns and Troubleshooting Guide
+Telecom Copilot POC — IBM BOB Hackathon 2026
+All content is synthetic. No real customer or network data is included.
+
+===========================================================================
+SECTION 1: FIBER CUT RESOLUTION PROCEDURES
+===========================================================================
+
+PATTERN: Physical Fiber Cut
+Symptoms: Complete loss of service on one or more cell sites; BGP route withdrawal;
+          high error rate on optical span; OTDR shows reflection/loss at fault point.
+Immediate Actions:
+  1. Verify alarm correlation — confirm fiber cut vs. equipment failure
+  2. Check if BGP failover activated automatically
+  3. Activate backup fiber route if available
+  4. Dispatch repair crew with OTDR equipment
+  5. Notify affected customers via SMS/push notification
+  6. Escalate to P1 if >10000 customers affected
+Root Cause Indicators: OTDR reflection point, third-party construction in area, weather event
+Resolution Time: 90-240 minutes depending on fiber type and location
+Prevention: Conduit markers, construction notifications, redundant fiber paths
+
+PATTERN: Subsea Cable Cut
+Symptoms: International traffic latency spike >200ms; specific geographic route degradation
+Immediate Actions:
+  1. Reroute traffic via alternative subsea cable immediately
+  2. Contact cable repair consortium
+  3. Notify Tier-1 transit providers
+Resolution Time: 6-72 hours for permanent repair
+
+===========================================================================
+SECTION 2: SIGNAL DEGRADATION PROCEDURES
+===========================================================================
+
+PATTERN: Antenna Misalignment
+Symptoms: Localised signal drop in specific sector; neighbouring cells unaffected;
+          RSRP/RSRQ degradation on specific azimuth; increased HO failure rate.
+Immediate Actions:
+  1. Check SON (Self-Organising Network) logs for recent parameter changes
+  2. Attempt remote antenna tilt adjustment via REM system
+  3. Compare current vs. baseline antenna parameters
+  4. If remote adjustment fails, dispatch field crew
+Root Cause Indicators: Recent wind event, tower maintenance work, parameter change
+Resolution Time: 15-90 minutes
+
+PATTERN: Interference — External
+Symptoms: PRB utilisation normal but throughput degraded; high interference level;
+          neighbouring cell reports similar symptoms.
+Immediate Actions:
+  1. Run interference detection scan on affected frequencies
+  2. Check for new in-building installations or small cells nearby
+  3. Coordinate with frequency management team
+Resolution Time: 2-48 hours depending on interference source
+
+PATTERN: Hardware Failure — RRU
+Symptoms: Cell sector offline; single sector affected while others normal;
+          VSWR alarm on specific antenna port.
+Immediate Actions:
+  1. Verify alarm: RRU hardware fault vs. feeder cable issue
+  2. Remote RRU restart attempt
+  3. If restart fails, dispatch for hardware replacement
+Resolution Time: 2-8 hours
+
+===========================================================================
+SECTION 3: CORE NETWORK PROCEDURES
+===========================================================================
+
+PATTERN: AMF/MME Failure (5G SA / 4G)
+Symptoms: Mass registration failure; new subscribers cannot attach;
+          existing sessions maintained via PDU session continuity.
+Immediate Actions:
+  1. Check AMF/MME software version — if recently updated, consider rollback
+  2. Verify database connectivity for subscriber data
+  3. Check network slice configuration
+  4. Initiate AMF/MME restart on standby node
+  5. If software issue confirmed, execute rollback procedure
+Root Cause Indicators: Recent software upgrade, database connectivity, configuration error
+Resolution Time: 15-90 minutes
+
+PATTERN: DNS Failure
+Symptoms: Widespread inability to resolve domain names; latency increase on DNS queries;
+          secondary DNS showing high load.
+Immediate Actions:
+  1. Check DNS server disk usage — common failure cause is disk full due to logging
+  2. Check DNS server process health
+  3. Verify secondary DNS is responding
+  4. If primary DNS unresponsive, failover to secondary immediately
+  5. Clear log directory if disk is full; restart DNS service
+Resolution Time: 5-30 minutes
+
+PATTERN: BGP Route Flap
+Symptoms: Traffic black-holes for specific prefixes; intermittent reachability;
+          BGP session dropping and re-establishing.
+Immediate Actions:
+  1. Identify the unstable BGP peer
+  2. Check physical link stability between BGP peers
+  3. Apply route dampening if flapping continues
+  4. Contact upstream provider if external BGP session affected
+Resolution Time: 15-120 minutes
+
+===========================================================================
+SECTION 4: CAPACITY AND PERFORMANCE
+===========================================================================
+
+PATTERN: Capacity Exhaustion — Stadium/Event
+Symptoms: PRB utilisation >95% on multiple cells; throughput per user severely degraded;
+          new connections succeeding but data rates <1Mbps.
+Immediate Actions:
+  1. Check event calendar — is a large gathering scheduled nearby?
+  2. Deploy mobile cells (COW — Cell on Wheels) if available
+  3. Activate QoS traffic prioritisation (voice over data)
+  4. Reduce video streaming quality caps temporarily
+Resolution Time: On-site deployment 1-4 hours; event-driven — recovers when crowd disperses
+
+PATTERN: Backhaul Capacity Bottleneck
+Symptoms: High utilisation on backhaul link (>80%); cell sites connected to that link all show
+          degraded throughput.
+Immediate Actions:
+  1. Identify overloaded backhaul links via NMS
+  2. Check if any runaway applications consuming excessive bandwidth
+  3. Apply traffic shaping on backhaul link
+  4. Request additional capacity from transport team
+Resolution Time: 30 minutes to several hours
+
+===========================================================================
+SECTION 5: POWER AND ENVIRONMENTAL
+===========================================================================
+
+PATTERN: Cell Site Power Failure
+Symptoms: Cell site completely offline; no alarms being received (site unreachable);
+          last known state was normal operation.
+Immediate Actions:
+  1. Check UPS status if available via remote monitoring
+  2. Contact local power company to confirm grid outage
+  3. Dispatch mobile generator if UPS depleted
+  4. Check fuel level on any installed generator
+Resolution Time: 1-8 hours depending on power restoration or generator deployment
+
+===========================================================================
+SECTION 6: ESCALATION THRESHOLDS
+===========================================================================
+
+Escalation to Executive On-Call:
+  - >50000 customers affected
+  - National media coverage likely
+  - Regulatory reporting required (>100000 customers for >1 hour)
+  - Revenue impact estimated >$100k/hour
+
+Escalation to L3 Network Engineering:
+  - P1 incidents not resolved within SLA
+  - Core network software suspected
+  - Novel failure mode not covered by runbooks
+
+Escalation to Vendor:
+  - Hardware failure beyond field repair capability
+  - Software bug confirmed
+  - Firmware rollback not available
+
+SLA Targets:
+  P1 — Response: 15 min; Resolution: 4 hours; Communication: Every 30 min
+  P2 — Response: 30 min; Resolution: 8 hours; Communication: Every 60 min
+  P3 — Response: 4 hours; Resolution: 24 hours
+  P4 — Response: 8 hours; Resolution: 72 hours

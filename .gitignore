@@ -1,0 +1,45 @@
+# -- Python ------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# -- Environment — NEVER commit credentials ----------------
+.env
+.env.local
+*.env
+
+# -- Test artefacts ----------------------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# -- ChromaDB local vector store ---------------------------
+bobCode/chroma_data/
+*.chroma
+
+# -- Node / Frontend ---------------------------------------
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# -- IDE / OS ----------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# -- Bob workspace (internal only) ------------------------
+.bob/tmp/
