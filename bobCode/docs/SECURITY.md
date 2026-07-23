@@ -1,7 +1,7 @@
-# Security Model — Telecom Outage Resolution Copilot
+# Security Model — Telecom Outage Resolution BOB
 
 **Version**: 1.0  
-**Owner**: Telecom Copilot Team — IBM BOB Hackathon 2026  
+**Owner**: Telecom BOB Team — IBM BOB Hackathon 2026  
 **Status**: ACTIVE — enforced from Sub-Task 1G onwards
 
 ---

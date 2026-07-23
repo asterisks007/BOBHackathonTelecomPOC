@@ -1,7 +1,7 @@
-# React Frontend — Telecom Copilot
+# React Frontend — Telecom BOB
 
 **Stack**: Vite 6 + React 19 + TypeScript  
-**Purpose**: Real-time UI for the 7-agent Telecom Outage Resolution Copilot  
+**Purpose**: Real-time UI for the 7-agent Telecom Outage Resolution BOB  
 **Status**: ST-5 Complete
 
 ---

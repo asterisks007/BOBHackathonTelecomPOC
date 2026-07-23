@@ -1,1 +1,1 @@
-"""Telecom Copilot — agents package."""
+"""Telecom BOB — agents package."""

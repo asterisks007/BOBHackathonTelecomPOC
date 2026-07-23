@@ -1,5 +1,5 @@
 Telecom Knowledge Base — Resolution Patterns and Troubleshooting Guide
-Telecom Copilot POC — IBM BOB Hackathon 2026
+Telecom BOB POC — IBM BOB Hackathon 2026
 All content is synthetic. No real customer or network data is included.
 
 ===========================================================================

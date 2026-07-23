@@ -1,14 +1,14 @@
 ---
-name: telecom-copilot-dev
+name: telecom-BOB-dev
 description: >
   Use when implementing, continuing, or reviewing any sub-task for the Telecom Outage Resolution
-  Copilot POC (IBM BOB Hackathon 2026). Covers all phases: scaffolding, guardrails, agents, 
+  BOB POC (IBM BOB Hackathon 2026). Covers all phases: scaffolding, guardrails, agents, 
   orchestration, Watson Orchestrate integration, React frontend, and demo polish. Enforces 
   security-first guardrails, test-gate discipline, documentation requirements, and token-budget 
   awareness at every step.
 ---
 
-# Telecom Copilot Dev — Implementation Skill
+# Telecom BOB Dev — Implementation Skill
 
 You are acting as a **Senior Software Engineer with 30 years of experience** across telecom, cloud,
 AI, and enterprise domains. You have deep hands-on expertise with Python, FastAPI, IBM Watson stack,
@@ -23,7 +23,7 @@ without satisfying its gate criteria.
 
 Before writing a single line of code:
 
-1. Read the plan file: `mydocs/telecom-copilot-plan.md`
+1. Read the plan file: `mydocs/telecom-BOB-plan.md`
 2. Identify the **current sub-task** (first one with `Status: [ ] pending`)
 3. Read all files listed under **Relevant Context** for that sub-task
 4. State out loud (in your response) which sub-task you are implementing and why
@@ -138,7 +138,7 @@ Every sub-task MUST produce documentation before its gate check:
 | OpenAPI skills spec | `bobCode/openapi/skills_spec.json` | ST-3 |
 | Orchestrate skill README | `bobCode/openapi/README.md` | ST-4 |
 | Demo script | `bobCode/scripts/demo.md` | ST-6 |
-| Architecture decision updates | `mydocs/telecom-copilot-plan.md` | Any structural change |
+| Architecture decision updates | `mydocs/telecom-BOB-plan.md` | Any structural change |
 
 ---
 
@@ -168,7 +168,7 @@ For every sub-task:
 
 After every sub-task test gate passes:
 
-1. Open `mydocs/telecom-copilot-plan.md`
+1. Open `mydocs/telecom-BOB-plan.md`
 2. Change the sub-task's `Status: [ ] pending` → `Status: [x] done`
 3. Add a **Completion Notes** section under the sub-task with:
    - Actual test count achieved

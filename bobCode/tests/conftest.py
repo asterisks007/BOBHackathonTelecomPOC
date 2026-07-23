@@ -1,5 +1,5 @@
 """
-Pytest shared fixtures for the Telecom Copilot test suite.
+Pytest shared fixtures for the Telecom BOB test suite.
 
 All fixtures default to USE_MOCK=True. External IBM services are never
 called during unit or integration tests.

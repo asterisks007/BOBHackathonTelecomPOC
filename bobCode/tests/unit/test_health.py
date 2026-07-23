@@ -25,7 +25,7 @@ class TestRootEndpoint:
     def test_root_contains_name(self, sync_client):
         """Response body includes the application name."""
         data = sync_client.get("/").json()
-        assert data["name"] == "Telecom Outage Resolution Copilot"
+        assert data["name"] == "Telecom Outage Resolution BOB"
 
     def test_root_contains_version(self, sync_client):
         """Response body includes a version field."""

@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.backends.legacy:build"
 
 [project]
-name = "telecom-copilot"
+name = "telecom-BOB"
 version = "0.1.0"
-description = "Telecom Outage Resolution Copilot — IBM BOB Hackathon 2026"
+description = "Telecom Outage Resolution BOB — IBM BOB Hackathon 2026"
 requires-python = ">=3.11"
 
 [tool.black]

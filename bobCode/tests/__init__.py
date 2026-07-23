@@ -1,1 +1,1 @@
-"""Telecom Copilot — test suite root."""
+"""Telecom BOB — test suite root."""

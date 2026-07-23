@@ -6,7 +6,7 @@
 
 ## Overview
 
-The Telecom Copilot exposes a webhook at `POST /webhook/orchestrate` that Watson Orchestrate
+The Telecom BOB exposes a webhook at `POST /webhook/orchestrate` that Watson Orchestrate
 calls when a skill is invoked. IBM BOB then writes the resulting ticket to Cloudant automatically.
 
 ```

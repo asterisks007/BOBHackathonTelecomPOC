@@ -1,5 +1,5 @@
 """
-Abstract base class for all 7 Telecom Copilot agents.
+Abstract base class for all 7 Telecom BOB agents.
 
 Every agent inherits from BaseAgent and implements _process_internal().
 The base class handles the full security lifecycle automatically:

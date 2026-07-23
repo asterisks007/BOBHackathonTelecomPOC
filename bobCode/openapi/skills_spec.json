@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Telecom Outage Resolution Copilot",
+    "title": "Telecom Outage Resolution BOB",
     "description": "7-agent agentic AI system for telecom outage resolution. IBM BOB Hackathon 2026 POC.",
     "version": "0.1.0"
   },
@@ -381,7 +381,7 @@
           "watson-orchestrate"
         ],
         "summary": "Watson Orchestrate skill entry point",
-        "description": "Called by Watson Orchestrate when the Telecom Copilot skill is invoked. Runs the full 7-agent pipeline and writes the resulting ticket to Cloudant via IBM BOB.",
+        "description": "Called by Watson Orchestrate when the Telecom BOB skill is invoked. Runs the full 7-agent pipeline and writes the resulting ticket to Cloudant via IBM BOB.",
         "operationId": "watson_orchestrate_webhook_webhook_orchestrate_post",
         "parameters": [
           {

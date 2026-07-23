@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Telecom Outage Resolution BOB — Usage Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #1f2328;
+    background: #ffffff;
+    padding: 0 16px 48px;
+  }
+  .page { max-width: 760px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .hero {
+    border-bottom: 2px solid #e5e7eb;
+    padding: 32px 0 24px;
+    margin-bottom: 32px;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #3b82d4;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #0f172a;
+    margin-bottom: 8px;
+  }
+  .hero p {
+    font-size: 15px;
+    color: #57606a;
+    max-width: 640px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 20px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span {
+    font-size: 12px;
+    color: #57606a;
+  }
+  .hero-meta strong { color: #1f2328; }
+
+  /* ── TOC ── */
+  .toc {
+    background: #f7f8fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 36px;
+  }
+  .toc h3 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #57606a;
+    margin-bottom: 10px;
+  }
+  .toc ol { padding-left: 18px; }
+  .toc li { margin: 4px 0; }
+  .toc a { color: #3b82d4; text-decoration: none; font-size: 13px; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* ── Sections ── */
+  section { margin-bottom: 40px; }
+  h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: #0f172a;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+  }
+  h2 .section-num {
+    display: inline-block;
+    background: #3b82d4;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 3px;
+    padding: 1px 6px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2328;
+    margin: 18px 0 8px;
+  }
+  p { margin-bottom: 10px; color: #374151; }
+  ul, ol { padding-left: 20px; margin-bottom: 12px; }
+  li { margin: 4px 0; color: #374151; }
+  strong { color: #1f2328; }
+
+  /* ── Callout ── */
+  .callout {
+    border-left: 3px solid #3b82d4;
+    background: #f0f7ff;
+    padding: 10px 14px;
+    border-radius: 0 4px 4px 0;
+    margin: 14px 0;
+    font-size: 13px;
+    color: #1e3a5f;
+  }
+  .callout.warn {
+    border-color: #d97706;
+    background: #fffbeb;
+    color: #78350f;
+  }
+  .callout.green {
+    border-color: #16a34a;
+    background: #f0fdf4;
+    color: #14532d;
+  }
+
+  /* ── Tables ── */
+  .table-wrap { overflow-x: auto; margin: 14px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    background: #f7f8fa;
+    border: 1px solid #e5e7eb;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+  }
+  tbody td {
+    border: 1px solid #e5e7eb;
+    padding: 7px 10px;
+    vertical-align: top;
+    color: #374151;
+  }
+  tbody tr:nth-child(even) td { background: #f9fafb; }
+
+  /* ── Code ── */
+  pre {
+    background: #f6f8fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 5px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    overflow-x: auto;
+    margin: 12px 0;
+    font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+    color: #24292f;
+  }
+  code {
+    font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+    font-size: 12.5px;
+    background: #f0f2f4;
+    border: 1px solid #e0e4e8;
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: #0550ae;
+  }
+
+  /* ── Persona cards ── */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 14px 0;
+  }
+  .persona-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 14px;
+    background: #f7f8fa;
+  }
+  .persona-card .role {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #3b82d4;
+    margin-bottom: 4px;
+  }
+  .persona-card .name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 6px;
+  }
+  .persona-card ul {
+    padding-left: 14px;
+    margin: 0;
+    font-size: 12.5px;
+    color: #57606a;
+  }
+
+  /* ── Agent pipeline ── */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 16px 0;
+    font-size: 12px;
+  }
+  .agent-node {
+    background: #3b82d4;
+    color: #fff;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .agent-node.parallel { background: #7c5cd8; }
+  .agent-node.security { background: #16a34a; }
+  .agent-arrow {
+    color: #9ca3af;
+    padding: 0 4px;
+    font-size: 14px;
+  }
+  .pipeline-label {
+    font-size: 11px;
+    color: #57606a;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ── Steps ── */
+  .steps { counter-reset: step; list-style: none; padding: 0; margin: 14px 0; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    background: #3b82d4;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .steps li .step-body { flex: 1; }
+  .steps li .step-body strong { display: block; font-size: 13px; margin-bottom: 2px; }
+  .steps li .step-body span { font-size: 12.5px; color: #57606a; }
+
+  /* ── Outcome badges ── */
+  .outcome-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 14px 0;
+  }
+  .outcome-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 12px;
+    background: #ffffff;
+  }
+  .outcome-card .metric {
+    font-size: 20px;
+    font-weight: 700;
+    color: #3b82d4;
+    line-height: 1.2;
+  }
+  .outcome-card .label {
+    font-size: 12px;
+    color: #57606a;
+    margin-top: 3px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 48px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+    font-size: 11px;
+    color: #9ca3af;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+
+<div class="hero">
+  <div class="hero-tag">IBM BOB Hackathon 2026 · POC</div>
+  <h1>Telecom Outage Resolution BOB</h1>
+  <p>A 7-agent agentic AI system that transforms a free-text customer complaint into a fully classified incident ticket, root-cause analysis, and actionable resolution steps — in under 8 seconds.</p>
+  <div class="hero-meta">
+    <span><strong>Stack:</strong> FastAPI · React 19 · ChromaDB · IBM watsonx.ai · Watson NLU · Cloudant · Watson Orchestrate</span>
+    <span><strong>Tests:</strong> 418 passing</span>
+    <span><strong>Real API calls used:</strong> 0 / 100 budget</span>
+  </div>
+</div>
+
+
+<div class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#what">What Is This System?</a></li>
+    <li><a href="#personas">Target Personas &amp; What They Get</a></li>
+    <li><a href="#architecture">System Architecture</a></li>
+    <li><a href="#quickstart">Quick Start (5 minutes)</a></li>
+    <li><a href="#data">Data Guide — Where to Find &amp; How to Feed</a></li>
+    <li><a href="#llm">Integrating Real LLMs &amp; IBM Services</a></li>
+    <li><a href="#watson">Watson Orchestrate &amp; IBM BOB Integration</a></li>
+    <li><a href="#api">API Reference</a></li>
+    <li><a href="#security">Security &amp; Guardrails</a></li>
+    <li><a href="#outcomes">Expected Outcomes</a></li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
+  </ol>
+</div>
+
+
+<section id="what">
+  <h2><span class="section-num">1</span>What Is This System?</h2>
+  <p>The <strong>Telecom Outage Resolution BOB</strong> is a proof-of-concept agentic AI system built for telecom operations. It acts as a digital first-responder: the moment a customer or NOC operator reports a service issue in plain English, the system spins up a coordinated pipeline of seven specialised AI agents that each do exactly one job, pass their findings forward, and collectively produce a complete resolution package.</p>
+
+  <div class="callout green">
+    <strong>Core promise:</strong> Free-text complaint → structured ticket + root-cause analysis + resolution steps + customer message, all in under 8 seconds, with full audit trail and zero PII exposure.
+  </div>
+
+  <h3>Why 7 Agents?</h3>
+  <p>Single-agent systems suffer from context overload and undifferentiated responsibility. By splitting the workflow into specialised agents, each unit can be tested, cached, replaced, and scaled independently:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Agent</th><th>Job</th><th>SLA</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Intent Recognition</strong></td><td>Classifies issue type, affected service, location, and priority from raw text using IBM NLU</td><td>&lt;500 ms</td></tr>
+        <tr><td>2</td><td><strong>Ticket Classification</strong></td><td>Creates a structured ticket with severity (P1–P4), queue routing, and SLA deadline</td><td>&lt;200 ms</td></tr>
+        <tr><td>3</td><td><strong>RCA Analysis</strong></td><td>Retrieves similar past incidents from ChromaDB (RAG) and calls Granite LLM to synthesise root cause</td><td>&lt;2 s</td></tr>
+        <tr><td>4a</td><td><strong>Escalation</strong></td><td>Applies 4-rule decision tree: escalate, assign level, compose notification, estimate cost impact</td><td>&lt;500 ms</td></tr>
+        <tr><td>4b</td><td><strong>Parallel Analysis</strong></td><td>Concurrent customer, network, and operational impact assessment (runs alongside Escalation)</td><td>&lt;1 s</td></tr>
+        <tr><td>5</td><td><strong>Response Generation</strong></td><td>Produces prioritised resolution steps and a professional customer-facing message via Granite</td><td>&lt;1.5 s</td></tr>
+        <tr><td>6</td><td><strong>Feedback</strong></td><td>Estimates CSAT impact, checks SLA compliance, extracts learning points, writes final audit entry</td><td>&lt;500 ms</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Agents 4a and 4b run concurrently via <code>asyncio.gather</code>, saving ~500 ms vs. sequential execution.</p>
+</section>
+
+
+<section id="personas">
+  <h2><span class="section-num">2</span>Target Personas &amp; What They Get</h2>
+
+  <div class="persona-grid">
+    <div class="persona-card">
+      <div class="role">NOC Operator</div>
+      <div class="name">Night-shift Network Analyst</div>
+      <ul>
+        <li>Instant P1/P2 classification — no manual triage</li>
+        <li>Pre-filled ticket with root cause ready to action</li>
+        <li>Automatic escalation routing to the right queue</li>
+        <li>Customer message drafted — just approve and send</li>
+        <li>SLA timer awareness built in</li>
+      </ul>
+    </div>
+    <div class="persona-card">
+      <div class="role">Operations Manager</div>
+      <div class="name">Telecom Ops Lead</div>
+      <ul>
+        <li>Real-time pipeline visibility via React dashboard</li>
+        <li>Escalation decisions with cost-impact estimates</li>
+        <li>CSAT forecast before customer contact</li>
+        <li>Audit trail for every incident — regulatory-ready</li>
+        <li>Budget-safe: IBM API usage tracked in /health</li>
+      </ul>
+    </div>
+    <div class="persona-card">
+      <div class="role">Field Engineer</div>
+      <div class="name">L2/L3 Network Engineer</div>
+      <ul>
+        <li>Structured resolution steps with ETAs</li>
+        <li>Evidence list from similar historical incidents</li>
+        <li>Estimated MTTR based on past data</li>
+        <li>Similar incident IDs for cross-reference</li>
+        <li>Confidence score on each diagnosis</li>
+      </ul>
+    </div>
+    <div class="persona-card">
+      <div class="role">Platform / AI Developer</div>
+      <div class="name">IBM BOB / Watson Builder</div>
+      <ul>
+        <li>OpenAPI spec ready for Watson Orchestrate import</li>
+        <li>Webhook endpoint for IBM BOB automation</li>
+        <li>7 standalone agent endpoints for skill registration</li>
+        <li>SSE streaming for real-time Watson flows</li>
+        <li>Mock-first: zero quota consumed during dev</li>
+      </ul>
+    </div>
+    <div class="persona-card">
+      <div class="role">Customer</div>
+      <div class="name">End Subscriber</div>
+      <ul>
+        <li>Professional, plain-language outage notification</li>
+        <li>Accurate estimated restoration time</li>
+        <li>No jargon — AI-generated but human-reviewed</li>
+        <li>PII never stored or exposed in any output</li>
+      </ul>
+    </div>
+    <div class="persona-card">
+      <div class="role">Hackathon Judge</div>
+      <div class="name">IBM Technical Evaluator</div>
+      <ul>
+        <li>Live 3-scenario demo in &lt;6 minutes</li>
+        <li>418 tests passing — all green, 0 real API calls</li>
+        <li>IBM watsonx.ai + NLU + Cloudant + Orchestrate</li>
+        <li>Security-first: PII guardrails, prompt injection blocked</li>
+        <li>Production-grade patterns: RAG, SSE, asyncio pipeline</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<section id="architecture">
+  <h2><span class="section-num">3</span>System Architecture</h2>
+
+  <h3>Pipeline Flow</h3>
+  <div class="pipeline">
+    <div class="agent-node security">PII Guard</div>
+    <div class="agent-arrow">→</div>
+    <div class="agent-node">Intent</div>
+    <div class="agent-arrow">→</div>
+    <div class="agent-node">Ticket</div>
+    <div class="agent-arrow">→</div>
+    <div class="agent-node">RCA + RAG</div>
+    <div class="agent-arrow">→</div>
+    <div class="agent-node parallel">Escalation ∥ Parallel</div>
+    <div class="agent-arrow">→</div>
+    <div class="agent-node">Resolution</div>
+    <div class="agent-arrow">→</div>
+    <div class="agent-node">Feedback</div>
+  </div>
+  <p class="pipeline-label">∥ = concurrent execution via asyncio.gather — saves ~500 ms</p>
+
+  <h3>Technology Stack</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Technology</th><th>Role</th><th>Mode</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LLM</strong></td><td>IBM watsonx.ai Granite 13B Instruct</td><td>RCA synthesis + resolution generation</td><td>Mock default; real via <code>USE_MOCK=false</code></td></tr>
+        <tr><td><strong>NLU</strong></td><td>IBM Watson NLU</td><td>Entity extraction, intent detection, sentiment</td><td>Mock default; real via SDK</td></tr>
+        <tr><td><strong>Vector DB</strong></td><td>ChromaDB (local)</td><td>RAG knowledge base — historical incidents + patterns</td><td>Always local; no API cost</td></tr>
+        <tr><td><strong>Document DB</strong></td><td>IBM Cloudant</td><td>Tickets, incidents, audit trail</td><td>Mock (in-memory dict) or real SDK</td></tr>
+        <tr><td><strong>Orchestration</strong></td><td>Watson Orchestrate + IBM BOB</td><td>Skill registration, workflow automation</td><td>Webhook <code>/webhook/orchestrate</code></td></tr>
+        <tr><td><strong>API</strong></td><td>FastAPI (Python 3.14)</td><td>REST + SSE streaming; 7-agent pipeline</td><td>Always real; no mock needed</td></tr>
+        <tr><td><strong>UI</strong></td><td>React 19 + Vite 8 + TypeScript</td><td>Real-time pipeline visualisation, chat input</td><td>Always real</td></tr>
+        <tr><td><strong>Embeddings</strong></td><td>sentence-transformers</td><td>Semantic similarity for ChromaDB RAG</td><td>Local; no API</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Directory Structure</h3>
+  <pre>BOBHackathonTelecomPOC/
+├── bobCode/                   ← FastAPI backend
+│   ├── api/
+│   │   ├── main.py            ← FastAPI app, CORS, router registration
+│   │   ├── models.py          ← Pydantic models (AgentRequest/Response, OrchestrationResult)
+│   │   ├── routes.py          ← POST /orchestrate, /orchestrate/stream, /agents/*
+│   │   ├── orchestrator.py    ← MasterOrchestrator — 7-agent pipeline
+│   │   └── watson_routes.py   ← POST /webhook/orchestrate (Watson Orchestrate + BOB)
+│   ├── agents/                ← 7 agent implementations
+│   │   ├── intent_agent.py
+│   │   ├── ticket_agent.py
+│   │   ├── rca_agent.py       ← RAG + Granite LLM, in-process cache
+│   │   ├── escalation_agent.py
+│   │   ├── parallel_agent.py  ← asyncio concurrent impact analysis
+│   │   ├── resolution_agent.py
+│   │   └── feedback_agent.py
+│   ├── core/
+│   │   ├── base_agent.py      ← Security lifecycle enforced for all agents
+│   │   ├── config.py          ← Settings, USE_MOCK flag, credential validation
+│   │   ├── guardrails.py      ← PII masking, input/output validation (100% branch cov.)
+│   │   ├── granite_client.py  ← watsonx.ai Granite wrapper (mock + live)
+│   │   ├── nlu_client.py      ← IBM NLU wrapper (mock + live)
+│   │   ├── cloudant_client.py ← IBM Cloudant wrapper (mock + live)
+│   │   ├── vectorstore.py     ← ChromaDB wrapper (ingest + query)
+│   │   └── audit.py           ← Append-only audit trail
+│   ├── data/
+│   │   ├── ingest.py          ← Loads seed data into ChromaDB
+│   │   └── seed_data/
+│   │       ├── incidents.json     ← 10 synthetic telecom incidents
+│   │       └── knowledge_base.txt ← Resolution patterns (6 sections)
+│   ├── openapi/
+│   │   └── skills_spec.json   ← OpenAPI spec for Watson Orchestrate import
+│   ├── scripts/
+│   │   └── demo.md            ← Exact judge demo script (3 scenarios)
+│   ├── docs/
+│   │   ├── SECURITY.md, CORE_INFRA.md, ORCHESTRATION.md
+│   │   ├── BUDGET_LOG.md      ← Real API call tracker (0 / 100 used)
+│   │   └── agents/AGENTS_OVERVIEW.md
+│   ├── tests/
+│   │   ├── unit/              ← 301 unit tests
+│   │   ├── integration/       ← 84 integration tests
+│   │   └── e2e/               ← 33 E2E smoke tests (3 demo scenarios)
+│   └── .env.example           ← Credential template
+└── frontend/                  ← React 19 + Vite 8 UI
+    ├── src/
+    │   ├── pages/Dashboard.tsx
+    │   ├── components/        ← ChatInput, AgentPipeline, ResolutionPanel, IncidentTimeline
+    │   ├── hooks/useOrchestration.ts  ← SSE consumer
+    │   └── types.ts
+    └── .env.example           ← VITE_API_URL=http://localhost:8000</pre>
+</section>
+
+
+<section id="quickstart">
+  <h2><span class="section-num">4</span>Quick Start (5 minutes)</h2>
+
+  <div class="callout">
+    <strong>Prerequisites:</strong> Python 3.11+ (tested on 3.14), Node 18+ (tested on 24), Git. No IBM credentials required for mock mode.
+  </div>
+
+  <h3>Step 1 — Clone &amp; install backend</h3>
+  <pre>git clone &lt;repo&gt;
+cd BOBHackathonTelecomPOC/bobCode
+
+# Create virtual environment
+python -m venv venv
+venv\Scripts\activate          # Windows
+# source venv/bin/activate     # macOS/Linux
+
+pip install -r requirements.txt
+pip install -r requirements-dev.txt</pre>
+
+  <h3>Step 2 — Configure environment</h3>
+  <pre># Copy the template — no credentials needed for mock mode
+copy .env.example .env         # Windows
+# cp .env.example .env         # macOS/Linux
+
+# Default .env content (works as-is):
+# USE_MOCK=true
+# API_HOST=0.0.0.0
+# API_PORT=8000
+# ALLOWED_ORIGINS=http://localhost:5173</pre>
+
+  <h3>Step 3 — Ingest knowledge base into ChromaDB</h3>
+  <pre>python data/ingest.py
+# INFO  Ingested 10 incidents into telecom_knowledge_base
+# INFO  Ingested 12 knowledge base chunks
+# INFO  Ingestion complete. Total documents: 22</pre>
+
+  <h3>Step 4 — Start the API server</h3>
+  <pre>uvicorn api.main:app --reload --port 8000
+# INFO:     Application startup complete.
+# INFO:     Uvicorn running on http://0.0.0.0:8000
+
+# Verify health
+curl http://localhost:8000/health</pre>
+  <pre>{
+  "status": "ok",
+  "version": "1.0.0",
+  "use_mock": true,
+  "api_calls_used": 0,
+  "api_calls_budget": 100
+}</pre>
+
+  <h3>Step 5 — Start the React frontend</h3>
+  <pre>cd ../frontend
+npm install
+npm run dev
+# ➜  Local:   http://localhost:5173</pre>
+
+  <h3>Step 6 — Run your first scenario</h3>
+  <p>Open <code>http://localhost:5173</code> and type in the chat box:</p>
+  <pre>4G outage in sector north. Fiber cut at junction box BX-42.
+Approximately 47000 customers affected. Service completely down.</pre>
+  <p>Or use the API directly:</p>
+  <pre>curl -X POST http://localhost:8000/orchestrate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "session_id": "demo-001",
+    "customer_id": "CUST-001",
+    "message": "Fiber cut at junction box BX-42, 47000 customers affected"
+  }'</pre>
+
+  <h3>Run all tests</h3>
+  <pre>cd bobCode
+python -m pytest tests/ -v
+# 418 passed, 0 failed in ~2s</pre>
+</section>
+
+
+<section id="data">
+  <h2><span class="section-num">5</span>Data Guide — Where to Find &amp; How to Feed</h2>
+
+  <h3>5.1 Seed Data (included — synthetic, ready to use)</h3>
+  <p>All data in <code>bobCode/data/seed_data/</code> is fully synthetic. No real customer records, real network coordinates, or real company names are used.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>File</th><th>Contents</th><th>Used by</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>incidents.json</code></td>
+          <td>10 synthetic telecom incidents (fiber cut, signal degradation, DNS failure, billing outage, power failure, capacity exhaustion, software bug, subsea cable, backhaul, core network)</td>
+          <td>ChromaDB ingestion → RCA Agent RAG retrieval</td>
+        </tr>
+        <tr>
+          <td><code>knowledge_base.txt</code></td>
+          <td>6 sections of resolution patterns: Fiber Cut, Signal Degradation, Core Network, Capacity, Power, Escalation Thresholds + SLA targets</td>
+          <td>ChromaDB ingestion → RCA Agent context chunks</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.2 Each incident record schema</h3>
+  <pre>{
+  "id":                 "INC-2024-000001",   // synthetic sequential ID
+  "type":               "fiber_cut",          // canonical issue type
+  "service":            "4G_LTE",             // affected service
+  "location":           "Sector-BX-North",    // synthetic location
+  "description":        "...",                // full incident description
+  "root_cause":         "...",                // actual root cause
+  "resolution":         "...",                // how it was resolved
+  "affected_customers": 47000,               // integer count
+  "severity":           "P1",                // P1–P4
+  "mttr_minutes":       112,                 // mean time to restore
+  "prevention":         "..."                 // future prevention tip
+}</pre>
+
+  <h3>5.3 Adding your own incidents</h3>
+  <ol>
+    <li>Append new records to <code>data/seed_data/incidents.json</code> following the schema above.</li>
+    <li>Use <strong>synthetic data only</strong> — fictional locations (grid references), anonymised IDs, no real customer data.</li>
+    <li>Re-run ingestion: <code>python data/ingest.py</code> (safe to re-run — uses upsert).</li>
+    <li>New incidents are immediately available to the RCA Agent via semantic similarity search.</li>
+  </ol>
+
+  <div class="callout warn">
+    <strong>Data compliance:</strong> Never add real customer names, real phone numbers, real email addresses, or real geographic coordinates to seed data. The system applies PII masking to inputs, but seed data that already contains PII will appear in RAG context without masking.
+  </div>
+
+  <h3>5.4 Adding resolution patterns to the knowledge base</h3>
+  <p>Edit <code>data/seed_data/knowledge_base.txt</code> and add new sections following this format:</p>
+  <pre>PATTERN: Your Pattern Name
+Symptoms: ...comma-separated or multi-line symptoms...
+Immediate Actions:
+  1. First step
+  2. Second step
+Root Cause Indicators: ...
+Resolution Time: X–Y minutes
+Prevention: ...</pre>
+  <p>Then re-run <code>python data/ingest.py</code>. The chunker splits on <code>PATTERN:</code> markers automatically.</p>
+
+  <h3>5.5 ChromaDB collections</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Collection</th><th>Config key</th><th>Contents</th><th>Query used by</th></tr></thead>
+      <tbody>
+        <tr><td><code>telecom_knowledge_base</code></td><td><code>CHROMA_COLLECTION_KB</code></td><td>Incidents + KB chunks</td><td>RCA Agent (top-5 similarity)</td></tr>
+        <tr><td><code>outage_patterns</code></td><td><code>CHROMA_COLLECTION_PATTERNS</code></td><td>Outage signatures</td><td>Parallel Analysis Agent</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ChromaDB persists to disk at <code>./chroma_data</code> (configurable via <code>CHROMA_PERSIST_DIR</code>). Delete this folder to reset all embeddings.</p>
+
+  <h3>5.6 Cloudant (live mode — tickets, audit trail)</h3>
+  <p>In mock mode, all Cloudant writes go to an in-memory dict. In live mode, these four collections are created automatically on first write:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Collection</th><th>Config key</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td><code>incidents</code></td><td><code>CLOUDANT_DB_INCIDENTS</code></td><td>Incident documents (from Watson Orchestrate)</td></tr>
+        <tr><td><code>tickets</code></td><td><code>CLOUDANT_DB_TICKETS</code></td><td>Tickets created by IBM BOB — PII-free</td></tr>
+        <tr><td><code>audit_trail</code></td><td><code>CLOUDANT_DB_AUDIT</code></td><td>Append-only event log for every agent run</td></tr>
+        <tr><td><code>knowledge_base</code></td><td><code>CLOUDANT_DB_KNOWLEDGE</code></td><td>Optional: dynamic KB updates</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section id="llm">
+  <h2><span class="section-num">6</span>Integrating Real LLMs &amp; IBM Services</h2>
+
+  <div class="callout">
+    <strong>Default is mock-first.</strong> All 418 tests and the full demo run with <code>USE_MOCK=true</code> — zero IBM credits consumed. Switch to live only when you have credentials and are ready.
+  </div>
+
+  <h3>6.1 Activating IBM watsonx.ai (Granite 13B)</h3>
+  <p><strong>Used by:</strong> RCA Agent (root cause synthesis) and Resolution Agent (customer message generation).</p>
+  <p><strong>Lite Plan:</strong> 100 free inference calls/month. The POC budget is ≤10 calls total.</p>
+
+  <ol class="steps">
+    <li><div class="step-body"><strong>Get credentials from IBM Cloud</strong><span>Go to <em>cloud.ibm.com → watsonx.ai → Manage → API keys</em>. Copy the API key and Project ID.</span></div></li>
+    <li><div class="step-body"><strong>Set in <code>.env</code></strong><span><pre style="margin:6px 0">WATSONX_API_KEY=your_api_key_here
+WATSONX_PROJECT_ID=your_project_id_here
+WATSONX_URL=https://us-south.ml.cloud.ibm.com
+USE_MOCK=false</pre></span></div></li>
+    <li><div class="step-body"><strong>Verify credentials at startup</strong><span>The <code>Settings.validate_live_credentials()</code> method checks all required keys and logs warnings for any missing ones when <code>USE_MOCK=false</code>.</span></div></li>
+    <li><div class="step-body"><strong>Monitor budget</strong><span>Call <code>GET /health</code> — check <code>api_calls_used</code> stays ≤10. The <code>GraniteClient._real_call_count</code> class-level counter tracks every live call.</span></div></li>
+  </ol>
+
+  <p><strong>Model parameters (hardcoded, budget-safe):</strong></p>
+  <pre>max_new_tokens:     256   # capped — prevents runaway generation
+temperature:        0.1   # low = deterministic, factual
+top_p:              0.9
+repetition_penalty: 1.1</pre>
+
+  <p><strong>Graceful degradation:</strong> If the Granite live call fails (network error, quota exceeded), the client automatically falls back to the keyword-based mock response. The pipeline never crashes due to LLM unavailability.</p>
+
+  <h3>6.2 Activating IBM Watson NLU</h3>
+  <p><strong>Used by:</strong> Intent Recognition Agent (entity extraction, keyword detection, sentiment).</p>
+  <p><strong>Lite Plan:</strong> 30,000 free calls/month — effectively unlimited for this POC.</p>
+
+  <pre>NLU_API_KEY=your_nlu_api_key_here
+NLU_URL=https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/XXXX</pre>
+
+  <p>Get these from <em>IBM Cloud → Natural Language Understanding → Manage → Credentials</em>.</p>
+
+  <p><strong>NLU features activated:</strong> <code>entities</code> (limit 10), <code>keywords</code> (limit 10), <code>sentiment</code> (document-level). All applied to PII-masked text only.</p>
+
+  <h3>6.3 Activating IBM Cloudant</h3>
+  <p><strong>Used by:</strong> All agents (audit trail), Feedback Agent (ticket write), Watson BOB (ticket persistence).</p>
+  <p><strong>Lite Plan:</strong> Unlimited — no quota concern.</p>
+
+  <pre>CLOUDANT_URL=https://ACCOUNT.cloudantnosqldb.appdomain.cloud
+CLOUDANT_API_KEY=your_cloudant_api_key_here</pre>
+
+  <p>Get these from <em>IBM Cloud → Cloudant → Manage → Credentials → IAM API key</em>. Collections are created automatically on first write via the SDK.</p>
+
+  <h3>6.4 Using a different LLM (non-Granite)</h3>
+  <p>The <code>GraniteClient</code> is the only file that references IBM watsonx.ai SDK. To swap in a different LLM:</p>
+  <ol>
+    <li>Edit <code>bobCode/core/granite_client.py</code></li>
+    <li>Replace the live path (lines 107–125) with your provider's SDK call (OpenAI, Anthropic, etc.)</li>
+    <li>Keep the same signature: <code>async def generate(prompt: str, ...) -&gt; str</code></li>
+    <li>The <code>max_new_tokens=256</code> cap and fallback to mock remain unchanged</li>
+  </ol>
+  <p>No other files need to change — all 7 agents and the orchestrator call only <code>granite_client.generate()</code>.</p>
+
+  <h3>6.5 Budget safety rules</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Rule</th><th>Where enforced</th></tr></thead>
+      <tbody>
+        <tr><td><code>USE_MOCK=true</code> is the default — never changed without explicit intent</td><td><code>core/config.py</code> default value</td></tr>
+        <tr><td>Every real call increments <code>GraniteClient._real_call_count</code></td><td><code>core/granite_client.py</code> line 98</td></tr>
+        <tr><td><code>GET /health</code> exposes <code>api_calls_used</code> vs <code>api_calls_budget: 100</code></td><td><code>api/main.py</code></td></tr>
+        <tr><td>If <code>api_calls_used ≥ 8</code>, freeze live mode immediately</td><td>Operator responsibility — see <code>BUDGET_LOG.md</code></td></tr>
+        <tr><td>Every real call logged in <code>docs/BUDGET_LOG.md</code> immediately after</td><td>Manual — operator responsibility</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section id="watson">
+  <h2><span class="section-num">7</span>Watson Orchestrate &amp; IBM BOB Integration</h2>
+
+  <h3>How it works end-to-end</h3>
+  <pre>Customer message
+  → Watson Orchestrate (NLP-triggered skill)
+      → POST /webhook/orchestrate  ← this service
+          → 7-agent pipeline
+          → Cloudant tickets/ write  (IBM BOB automation)
+          → WatsonSkillResponse (flat JSON)
+      → Watson Orchestrate returns customer_message to user</pre>
+
+  <h3>Step 1 — Export and import the OpenAPI spec</h3>
+  <pre>cd bobCode
+python scripts/export_openapi.py
+# outputs openapi/skills_spec.json</pre>
+  <p>In Watson Orchestrate: <em>Skills → Add skill → From OpenAPI file</em> → upload <code>skills_spec.json</code>.</p>
+
+  <h3>Step 2 — Configure the webhook skill</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>session_id</code></td><td>string</td><td>✅</td><td>Watson Orchestrate session ID (pass from context)</td></tr>
+        <tr><td><code>customer_id</code></td><td>string</td><td>✅</td><td>Anonymised customer identifier</td></tr>
+        <tr><td><code>message</code></td><td>string</td><td>✅</td><td>Customer complaint text (max 2000 chars)</td></tr>
+        <tr><td><code>source</code></td><td>string</td><td>—</td><td>Default: <code>watson_orchestrate</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Set header: <code>Authorization: Bearer {WATSON_ORCHESTRATE_API_KEY}</code></p>
+
+  <h3>Step 3 — Webhook response schema (WatsonSkillResponse)</h3>
+  <pre>{
+  "ticket_id":              "INC-2026-042871",
+  "severity":               "P1",
+  "queue":                  "Network_Operations",
+  "root_cause_summary":     "Physical fiber cut at junction box BX-42...",
+  "resolution_steps_count": 4,
+  "customer_message":       "We are aware of a service disruption...",
+  "escalated":              true,
+  "sla_met":                null,
+  "total_execution_ms":     412.3,
+  "status":                 "success"
+}</pre>
+
+  <h3>Step 4 — Cloudant ticket document (IBM BOB writes this)</h3>
+  <pre>{
+  "ticket_id":           "INC-2026-042871",
+  "session_id":          "sess-...",
+  "source":              "ibm_bob",
+  "severity":            "P1",
+  "queue":               "Network_Operations",
+  "issue_type":          "fiber_cut",
+  "root_cause_summary":  "Physical fiber cut...",   // PII-masked
+  "resolution_steps":    ["1. Activate BGP failover", "2. Dispatch crew"],
+  "escalated":           true,
+  "escalation_level":    "Management",
+  "sla_minutes":         240,
+  "affected_customers":  47000,
+  "automation_score":    0.30,
+  "created_at":          "2026-07-22T14:30:00Z",
+  "status":              "open"
+}</pre>
+
+  <h3>Retrieve a ticket</h3>
+  <pre>GET /webhook/tickets/{ticket_id}
+# Returns the full Cloudant document for that ticket_id</pre>
+
+  <h3>Required credentials for live Watson integration</h3>
+  <pre>WATSON_ORCHESTRATE_URL=https://...
+WATSON_ORCHESTRATE_API_KEY=...
+CLOUDANT_URL=https://ACCOUNT.cloudantnosqldb.appdomain.cloud
+CLOUDANT_API_KEY=...</pre>
+</section>
+
+
+<section id="api">
+  <h2><span class="section-num">8</span>API Reference</h2>
+
+  <div class="callout">
+    Full interactive documentation available at <code>http://localhost:8000/docs</code> (Swagger UI) when the server is running.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Returns</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td><code>/orchestrate</code></td><td>Full 7-agent pipeline (blocking)</td><td><code>OrchestrationResult</code></td></tr>
+        <tr><td>POST</td><td><code>/orchestrate/stream</code></td><td>Full pipeline with SSE streaming — one event per agent</td><td>SSE event stream</td></tr>
+        <tr><td>POST</td><td><code>/webhook/orchestrate</code></td><td>Watson Orchestrate entry point — runs pipeline + writes Cloudant</td><td><code>WatsonSkillResponse</code></td></tr>
+        <tr><td>GET</td><td><code>/webhook/tickets/{id}</code></td><td>Retrieve a ticket by ID from Cloudant</td><td>Ticket document</td></tr>
+        <tr><td>GET</td><td><code>/health</code></td><td>Service health + API budget counter</td><td><code>HealthResponse</code></td></tr>
+        <tr><td>POST</td><td><code>/agents/intent</code></td><td>Intent Recognition Agent — standalone</td><td><code>AgentResponse</code></td></tr>
+        <tr><td>POST</td><td><code>/agents/ticket</code></td><td>Ticket Classification Agent — standalone</td><td><code>AgentResponse</code></td></tr>
+        <tr><td>POST</td><td><code>/agents/rca</code></td><td>RCA Agent — standalone (RAG + LLM)</td><td><code>AgentResponse</code></td></tr>
+        <tr><td>POST</td><td><code>/agents/escalation</code></td><td>Escalation Agent — standalone</td><td><code>AgentResponse</code></td></tr>
+        <tr><td>POST</td><td><code>/agents/parallel</code></td><td>Parallel Analysis Agent — standalone</td><td><code>AgentResponse</code></td></tr>
+        <tr><td>POST</td><td><code>/agents/resolution</code></td><td>Resolution Generation Agent — standalone</td><td><code>AgentResponse</code></td></tr>
+        <tr><td>POST</td><td><code>/agents/feedback</code></td><td>Feedback Agent — standalone</td><td><code>AgentResponse</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Orchestrate request body</h3>
+  <pre>{
+  "session_id":  "string — unique conversation turn ID",
+  "customer_id": "string — anonymised customer identifier",
+  "message":     "string — free-text complaint (1–2000 chars)"
+}</pre>
+
+  <h3>OrchestrationResult response</h3>
+  <pre>{
+  "session_id":          "...",
+  "ticket_id":           "INC-2026-XXXXXX",
+  "intent_summary":      { "issue_type": "fiber_cut", "service": "4G_LTE", "priority": "Critical", ... },
+  "ticket_summary":      { "severity": "P1", "queue": "Network_Operations", "sla_minutes": 240, ... },
+  "rca_summary":         { "root_cause": "...", "confidence": 0.93, "evidence": [...], ... },
+  "escalation_summary":  { "escalate": true, "escalation_level": "Management", ... },
+  "analysis_summary":    { "customer_impact": {...}, "network_impact": {...}, ... },
+  "resolution_summary":  { "resolution_steps": [...], "customer_message": "...", ... },
+  "feedback_summary":    { "sla_met": true, "csat": 3.2, "learning_points": [...] },
+  "total_execution_ms":  412.3,
+  "agents_completed":    ["intent_recognition", "ticket_classification", ...],
+  "agents_failed":       []
+}</pre>
+
+  <h3>SSE stream event schema</h3>
+  <pre>data: {"stage":"rca_analysis","agent":"rca_analysis","status":"success",
+       "confidence":0.88,"partial_result":{"root_cause":"Physical fiber cut..."}}</pre>
+  <pre>data: {"stage":"complete","agent":"orchestrator","status":"success",
+       "total_execution_ms":412.3,"ticket_id":"INC-2026-...","agents_failed":[]}</pre>
+</section>
+
+
+<section id="security">
+  <h2><span class="section-num">9</span>Security &amp; Guardrails</h2>
+
+  <h3>PII Protection (applied at every data boundary)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Pattern</th><th>Example Input</th><th>After Masking</th></tr></thead>
+      <tbody>
+        <tr><td>Phone number</td><td><code>Call +1 555-012-3456</code></td><td><code>Call [REDACTED]</code></td></tr>
+        <tr><td>Email address</td><td><code>john.doe@example.com</code></td><td><code>[REDACTED]</code></td></tr>
+        <tr><td>US SSN</td><td><code>SSN: 123-45-6789</code></td><td><code>SSN: [REDACTED]</code></td></tr>
+        <tr><td>Credit card</td><td><code>4111 1111 1111 1111</code></td><td><code>[REDACTED]</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Input validation (applied before any agent processes text)</h3>
+  <ul>
+    <li>Maximum 2000 characters</li>
+    <li>SQL injection blocked: <code>UNION SELECT</code>, <code>DROP TABLE</code>, <code>--</code> comments, etc.</li>
+    <li>Prompt injection blocked: <code>ignore all previous instructions</code>, <code>you are now a</code>, instruction tags (<code>[INST]</code>, <code>&lt;|im_start|&gt;</code>), etc.</li>
+    <li>Rejections return a generic safe message — attack patterns are never revealed</li>
+  </ul>
+
+  <h3>Output validation (before every AgentResponse is returned)</h3>
+  <ul>
+    <li>Confidence threshold: ≥ 0.5 required; below threshold → escalate to fallback</li>
+    <li>Required fields check: agent-specific schema validated</li>
+    <li>PII scan: all string fields in agent output checked for leaked PII</li>
+  </ul>
+
+  <h3>Audit trail</h3>
+  <p>Every orchestration run writes immutable sanitised events to <code>audit_trail</code> (in-memory in mock mode; Cloudant in live mode). What is <strong>never</strong> logged: raw user text, unmasked PII, stack traces, credentials.</p>
+
+  <h3>Network security</h3>
+  <ul>
+    <li>CORS restricted to <code>http://localhost:5173</code> — never wildcard</li>
+    <li>Only <code>GET</code> and <code>POST</code> methods accepted</li>
+    <li><code>.env</code> is in <code>.gitignore</code> — credentials never committed</li>
+  </ul>
+</section>
+
+
+<section id="outcomes">
+  <h2><span class="section-num">10</span>Expected Outcomes</h2>
+
+  <h3>Performance</h3>
+  <div class="outcome-grid">
+    <div class="outcome-card">
+      <div class="metric">&lt; 8 s</div>
+      <div class="label">End-to-end pipeline (all 7 agents, mock mode)</div>
+    </div>
+    <div class="outcome-card">
+      <div class="metric">418</div>
+      <div class="label">Tests passing (unit + integration + E2E)</div>
+    </div>
+    <div class="outcome-card">
+      <div class="metric">0 / 100</div>
+      <div class="label">Real IBM API calls used (Lite Plan budget intact)</div>
+    </div>
+    <div class="outcome-card">
+      <div class="metric">100%</div>
+      <div class="label">Branch coverage on guardrails.py</div>
+    </div>
+    <div class="outcome-card">
+      <div class="metric">P1–P4</div>
+      <div class="label">Automatic severity classification with SLA deadlines</div>
+    </div>
+    <div class="outcome-card">
+      <div class="metric">~500 ms</div>
+      <div class="label">Saved per run by concurrent Stage 4 (asyncio.gather)</div>
+    </div>
+  </div>
+
+  <h3>For each incident submitted, the system produces:</h3>
+  <ol>
+    <li><strong>Structured ticket</strong> — ID, severity (P1–P4), routing queue, SLA deadline, category</li>
+    <li><strong>Root cause analysis</strong> — hypothesis with confidence score (0–1), evidence list from historical incidents, estimated scope (customers affected), MTTR estimate</li>
+    <li><strong>Escalation decision</strong> — escalate true/false, escalation level (None / L2 / Management / Executive), notification list, revenue impact estimate</li>
+    <li><strong>Impact analysis</strong> — customer impact (count, severity), network impact (services affected, BGP state), operational impact (crew needed, cost estimate)</li>
+    <li><strong>Resolution steps</strong> — ordered, actionable, tailored to issue type (e.g. "Activate BGP failover", "Dispatch fiber repair crew with OTDR")</li>
+    <li><strong>Customer message</strong> — professional, jargon-free, ready to send via SMS/email/portal</li>
+    <li><strong>Feedback &amp; learning</strong> — SLA compliance check, CSAT estimate, learning points for post-mortem</li>
+    <li><strong>Audit trail entry</strong> — immutable, sanitised, timestamped — regulatory-ready</li>
+  </ol>
+
+  <h3>What the system does NOT do (current POC scope)</h3>
+  <ul>
+    <li>It does not autonomously push changes to live network equipment (human approval required)</li>
+    <li>It does not send actual SMS/email/push notifications (outputs the message draft only)</li>
+    <li>It does not store real customer data — all seed data is synthetic</li>
+    <li>Speech-to-text / text-to-speech interfaces are optional and not implemented in this POC</li>
+  </ul>
+</section>
+
+
+<section id="troubleshooting">
+  <h2><span class="section-num">11</span>Troubleshooting</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Problem</th><th>Likely Cause</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>ModuleNotFoundError: No module named 'fastapi'</code></td>
+          <td>Virtual environment not activated</td>
+          <td>Run <code>venv\Scripts\activate</code> (Windows) or <code>source venv/bin/activate</code></td>
+        </tr>
+        <tr>
+          <td><code>ModuleNotFoundError: No module named 'chromadb'</code></td>
+          <td>chromadb not installed (optional on some envs)</td>
+          <td><code>pip install chromadb==0.5.3 sentence-transformers==3.0.1</code>. System degrades gracefully — RCA still works with mock responses.</td>
+        </tr>
+        <tr>
+          <td><code>.env not found</code></td>
+          <td>Missing .env file</td>
+          <td><code>copy .env.example .env</code> — no credentials needed for mock mode</td>
+        </tr>
+        <tr>
+          <td>Frontend cannot reach backend</td>
+          <td>CORS mismatch or backend not running</td>
+          <td>Ensure backend runs on port 8000; <code>frontend/.env</code> has <code>VITE_API_URL=http://localhost:8000</code></td>
+        </tr>
+        <tr>
+          <td><code>ticket_id</code> is <code>null</code></td>
+          <td>Message too short or no recognised keywords</td>
+          <td>Add telecom context: "fiber cut", "outage", "4G", "billing" — at least 5 words</td>
+        </tr>
+        <tr>
+          <td>RCA returns generic "default" response</td>
+          <td>No keyword match in Granite mock; ChromaDB not ingested</td>
+          <td>Run <code>python data/ingest.py</code>; add recognised keyword to message</td>
+        </tr>
+        <tr>
+          <td>Live Granite call fails silently</td>
+          <td>Wrong API key or project ID</td>
+          <td>Check <code>GET /health</code> logs; verify <code>WATSONX_API_KEY</code> and <code>WATSONX_PROJECT_ID</code> in <code>.env</code></td>
+        </tr>
+        <tr>
+          <td>Escalation not triggered</td>
+          <td>Priority not "Critical"</td>
+          <td>Add "critical", "emergency", "50000 customers", or "complete outage" to the message</td>
+        </tr>
+        <tr>
+          <td>Watson Orchestrate skill not appearing</td>
+          <td>Stale OpenAPI spec</td>
+          <td>Re-run <code>python scripts/export_openapi.py</code> and re-import <code>skills_spec.json</code></td>
+        </tr>
+        <tr>
+          <td>Tests fail after adding new incident to seed data</td>
+          <td>ChromaDB state inconsistent</td>
+          <td>Delete <code>bobCode/chroma_data/</code> folder and re-run <code>python data/ingest.py</code></td>
+        </tr>
+        <tr>
+          <td><code>pytest</code> asyncio errors</td>
+          <td>Wrong pytest-asyncio mode</td>
+          <td><code>pytest.ini</code> sets <code>asyncio_mode = auto</code> — ensure <code>pytest-asyncio</code> is installed</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Useful diagnostic commands</h3>
+  <pre># Check health + budget
+curl http://localhost:8000/health | python -m json.tool
+
+# Run only E2E demo scenarios
+python -m pytest tests/e2e/ -v
+
+# Run with coverage report
+python -m pytest tests/ --cov=core --cov-report=term-missing
+
+# Re-export OpenAPI spec
+python scripts/export_openapi.py
+
+# Reset ChromaDB (force full re-ingest)
+rmdir /s /q chroma_data &amp;&amp; python data/ingest.py</pre>
+</section>
+
+
+<footer>
+  <p>Telecom Outage Resolution BOB · IBM BOB Hackathon 2026 · ST-0 through ST-6 complete · 418 tests passing</p>
+  <p style="margin-top:4px">Made with IBM Bob</p>
+</footer>
+
+</div>
+</body>
+</html>

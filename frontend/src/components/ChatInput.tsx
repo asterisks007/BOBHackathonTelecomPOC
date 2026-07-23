@@ -28,7 +28,7 @@ export function ChatInput({ onSubmit, isRunning, onCancel }: Props) {
     <form onSubmit={handleSubmit} style={styles.form}>
       <div style={styles.header}>
         <span style={styles.icon}>📡</span>
-        <span style={styles.title}>Telecom Outage Resolution Copilot</span>
+        <span style={styles.title}>Telecom Outage Resolution BOB</span>
         <span style={styles.badge}>IBM BOB · 7-Agent Pipeline</span>
       </div>
 

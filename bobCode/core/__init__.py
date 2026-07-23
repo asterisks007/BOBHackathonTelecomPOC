@@ -1,1 +1,1 @@
-"""Telecom Copilot — core package."""
+"""Telecom BOB — core package."""

@@ -1,8 +1,8 @@
-# Architecture Decisions - Telecom Outage Resolution Copilot POC
+# Architecture Decisions - Telecom Outage Resolution BOB POC
  
 ## Document Purpose
  
-This document captures all major architecture decisions, design patterns, and technical choices made for the Telecom Outage Resolution Copilot POC for IBM BOB Hackathon 2026.
+This document captures all major architecture decisions, design patterns, and technical choices made for the Telecom Outage Resolution BOB POC for IBM BOB Hackathon 2026.
  
 ---
  
@@ -680,7 +680,7 @@ logger.info(f"Agent: {agent_name}, Duration: {execution_time}ms, Status: {status
 FastAPI - FastAPI
 FastAPI framework, high performance, easy to learn, fast to code, ready for production
  
-# Plan: Telecom Outage Resolution Copilot POC
+# Plan: Telecom Outage Resolution BOB POC
  
 ## Event & Context
  
@@ -1120,7 +1120,7 @@ All tests recorded with:
 IBM Cloud Pak for Data
 Log in to explore IBM Cloud Pak for Data services on one platform, fully managed on the IBM Cloud, and see how you can accelerate your journey to AI today.
  
-# Telecom Copilot POC - IBM BOB Hackathon
+# Telecom BOB POC - IBM BOB Hackathon
  
 **Event**: IBM BOB Hackathon 2026  
 **Date**: July 22, 2026  
@@ -1300,7 +1300,7 @@ pytest tests/ -vv
  
 ## Team
  
-IBM BOB Hackathon 2026 - Telecom Copilot Team
+IBM BOB Hackathon 2026 - Telecom BOB Team
  
 ## License
  

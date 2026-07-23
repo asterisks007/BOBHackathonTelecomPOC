@@ -1,1 +1,1 @@
-"""Telecom Copilot — API package."""
+"""Telecom BOB — API package."""

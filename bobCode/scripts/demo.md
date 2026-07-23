@@ -1,4 +1,4 @@
-# Demo Script — Telecom Outage Resolution Copilot
+# Demo Script — Telecom Outage Resolution BOB
 ## IBM BOB Hackathon 2026 · Judge Walkthrough Guide
 
 > **Presenter**: Follow each step in order. Expected outputs are shown after every command.  
@@ -21,7 +21,7 @@ npm run dev
 
 Verify:
 - [ ] `http://localhost:8000/health` returns `{"status":"ok","use_mock":true}`
-- [ ] `http://localhost:5173` shows the Telecom Copilot dashboard
+- [ ] `http://localhost:5173` shows the Telecom BOB dashboard
 - [ ] Browser console has no red errors
 
 ---

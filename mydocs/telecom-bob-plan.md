@@ -1,4 +1,4 @@
-# Telecom Outage Resolution Copilot — Implementation Plan
+# Telecom Outage Resolution BOB — Implementation Plan
 
 **Event**: IBM BOB Hackathon 2026 (July 22–23)
 **Project**: 7-Agent Agentic Orchestration for Telecom Outage Resolution
@@ -16,7 +16,7 @@ BOBHackathonTelecomPOC/
 
 ## Top-Level Overview
 
-Build a **FastAPI-backed, agentic AI copilot** that resolves telecom outages end-to-end. A customer
+Build a **FastAPI-backed, agentic AI BOB** that resolves telecom outages end-to-end. A customer
 reports an outage in free-text; the system routes it through 7 specialized agents (Intent → Ticket →
 RCA → Escalation + Parallel Analysis → Response → Feedback) coordinated by a Master Orchestrator. The
 demo culminates with Watson Orchestrate + IBM BOB automating ticket creation and a React UI showing the
@@ -163,7 +163,7 @@ This sub-task gates Sub-Task 1. If guardrail tests fail, Sub-Task 1 does not sta
    - Audit logger: events written, no raw PII in logged payload
 5. Run `pytest tests/unit/test_guardrails.py -v --cov=core/guardrails --cov=core/audit --cov-report=term-missing`
 6. Confirm 100% branch coverage on guardrails.py; fix any gap before proceeding
-7. Update `mydocs/telecom-copilot-plan.md` status to `[x] done` with test count
+7. Update `mydocs/telecom-bob-plan.md` status to `[x] done` with test count
 
 **Relevant Context**
 - Architecture Section 5 (`mydocs/planning.md`) — PII patterns, input/output validation rules
@@ -544,5 +544,5 @@ Update this table in `BUDGET_LOG.md` after every real API call.
 **Plan file created**: 2026-07-22
 **Updated**: Added ST-1G (Guardrails), Test Gate table, Token Budget Tracker, Documentation gates
 **Based on**: `mydocs/planning.md` (Architecture Decisions + Implementation Plan)
-**Skill**: `.bob/skills/telecom-copilot-dev/SKILL.md`
+**Skill**: `.bob/skills/telecom-BOB-dev/SKILL.md`
 **Status**: READY FOR IMPLEMENTATION ✅

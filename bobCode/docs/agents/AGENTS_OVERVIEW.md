@@ -1,4 +1,4 @@
-# Agent Contract Docs — Telecom Copilot POC
+# Agent Contract Docs ï¿½ TelecoBOBot POC
 
 Generated: 2026-07-22 | Status: ST-2 Complete
 
@@ -18,6 +18,6 @@ All agents:
 - Validate input and output via guardrails
 - Write sanitised events to AuditLogger
 - Return AgentResponse with status, result, metadata
-- USE_MOCK=True default — zero real IBM calls
+- USE_MOCK=True default ï¿½ zero real IBM calls
 
 Full contract details are in each agent source file docstring.

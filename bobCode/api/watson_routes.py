@@ -101,7 +101,7 @@ class BOBTicketDocument(BaseModel):
     response_model=WatsonSkillResponse,
     summary="Watson Orchestrate skill entry point",
     description=(
-        "Called by Watson Orchestrate when the Telecom Copilot skill is invoked. "
+        "Called by Watson Orchestrate when the Telecom BOB skill is invoked. "
         "Runs the full 7-agent pipeline and writes the resulting ticket to Cloudant via IBM BOB."
     ),
 )

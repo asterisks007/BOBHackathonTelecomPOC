@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup / shutdown lifecycle handler."""
     settings = get_settings()
     logger.info(
-        "Telecom Copilot starting | use_mock=%s | port=%s",
+        "Telecom BOB starting | use_mock=%s | port=%s",
         settings.use_mock,
         settings.api_port,
     )
@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         if missing:
             logger.error("Missing live credentials: %s", missing)
     yield
-    logger.info("Telecom Copilot shutting down.")
+    logger.info("Telecom BOB shutting down.")
 
 
 # ── App instantiation ─────────────────────────────────────────────────────────
@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 settings = get_settings()
 
 app = FastAPI(
-    title="Telecom Outage Resolution Copilot",
+    title="Telecom Outage Resolution BOB",
     description=(
         "7-agent agentic AI system for telecom outage resolution. "
         "IBM BOB Hackathon 2026 POC."
@@ -79,7 +79,7 @@ async def root() -> JSONResponse:
     """Return basic application metadata."""
     return JSONResponse(
         {
-            "name": "Telecom Outage Resolution Copilot",
+            "name": "Telecom Outage Resolution BOB",
             "version": "0.1.0",
             "event": "IBM BOB Hackathon 2026",
             "status": "running",
