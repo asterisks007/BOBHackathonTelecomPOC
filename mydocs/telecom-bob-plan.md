@@ -71,8 +71,9 @@ External services per agent:
   Watson Orchestrate       — Skill orchestration (Phase 3)
   IBM BOB                  — Ticket automation (Phase 3)
 
-**IBM Cloud Deployment Strategy**:
-For full granular step-by-step instructions on containerizing FastAPI (Python 3.14), deploying embedded ChromaDB Vector DB on IBM Cloud Code Engine, managing secrets via IBM Cloud Secrets Manager, and importing agent skills into watsonx Orchestrate, see [IBM Cloud Deployment Guide](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/ibm-cloud-deployment-guide.md).
+**IBM Cloud Deployment & Execution Strategies**:
+- [Option 1: Full IBM Cloud Code Engine Container Deployment](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/option-1-ibm-code-engine-deployment.md) (Serverless Containers)
+- [Option 2: Laptop Execution + ngrok Tunnel + watsonx Orchestrate](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/option-2-local-laptop-ngrok-watsonx-orchestrate-guide.md) (Recommended Hackathon Strategy)
 
 ---
 

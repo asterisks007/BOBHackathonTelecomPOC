@@ -2,7 +2,7 @@
 
 **Project**: BOBHackathonTelecomPOC  
 **Target Platform**: IBM Cloud (watsonx Orchestrate + IBM Cloud Code Engine + Cloudant + watsonx.ai + IBM NLU)  
-**Version**: 1.0 | **Updated**: 2026-07-23  
+**Version**: 1.0 | **Updated**: 2026-07-24  
 
 ---
 
@@ -12,13 +12,32 @@ This document provides a granular, production-ready guide for deploying the **Te
 
 The solution uses a **watsonx Orchestrate-Centric Multi-Agent Architecture**:
 - **watsonx Orchestrate**: Functions as the central **Master Agent / Orchestrator Platform**, managing user conversations, goal decomposition, skill selection, state tracking, and execution flow.
-- **FastAPI (Python 3.14)**: Deployed on **IBM Cloud Code Engine** as the **Intelligence & Skill Server**, hosting 7 specialized agent skills, security guardrails (PII masking & input validation), and the embedded **ChromaDB Vector DB** for RAG lookups.
+- **FastAPI (Python 3.14 / 3.11)**: Deployed on **IBM Cloud Code Engine** as the **Intelligence & Skill Server**, hosting 7 specialized agent skills, security guardrails (PII masking & input validation), and the embedded **ChromaDB Vector DB** for RAG lookups.
 - **React 19 + Vite 8 + TypeScript**: Deployed as a containerized static application on **IBM Cloud Code Engine** (or hosted via IBM Cloud Object Storage + CDN), embedding the watsonx Orchestrate Webchat widget.
 - **IBM Managed Services**:
   - **watsonx.ai**: Powers Granite 13B LLM reasoning for RCA and response generation.
   - **IBM NLU**: Performs intent recognition and entity extraction.
   - **IBM Cloudant**: NoSQL storage for incident tickets and immutable audit logs.
   - **IBM BOB**: Workflow automation triggering ticket writes to Cloudant on skill completion.
+
+---
+
+## How to Retrieve Your Account & Resource Group Details
+
+Before executing deployment commands, retrieve your account ID and resource group:
+
+1. **List Accounts**:
+   ```bash
+   ibmcloud account list
+   ```
+2. **List Resource Groups**:
+   ```bash
+   ibmcloud resource groups
+   ```
+3. **Target Account & Resource Group**:
+   ```bash
+   ibmcloud target -c <YOUR_ACCOUNT_ID> -g <YOUR_RESOURCE_GROUP>
+   ```
 
 ---
 
@@ -64,16 +83,14 @@ The solution uses a **watsonx Orchestrate-Centric Multi-Agent Architecture**:
 
 ---
 
-## Step 1: FastAPI (Python 3.14) & ChromaDB Vector DB Containerization
+## Step 1: FastAPI & ChromaDB Vector DB Containerization
 
 The backend service encapsulates the 7 specialized agents, PII security guardrails, and ChromaDB vector database.
 
 ### 1.1 `bobCode/Dockerfile`
 
-Create `bobCode/Dockerfile` for Python 3.14 containerization:
-
 ```dockerfile
-FROM python:3.14-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -83,9 +100,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Install CPU PyTorch to prevent memory exhaustion & timeouts
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
 # Copy dependency specifications
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --default-timeout=1000 -r requirements.txt
 
 # Copy application source
 COPY . .
@@ -111,23 +131,26 @@ CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
 # Login to IBM Cloud CLI
 ibmcloud login --sso
 
-# Set target region and resource group
-ibmcloud target -g Default -r us-south
+# Target account, region, and resource group
+ibmcloud target -c <YOUR_ACCOUNT_ID> -r us-south -g <YOUR_RESOURCE_GROUP>
 ```
 
 ### 2.2 Build & Push Image to IBM Cloud Container Registry (ICR)
 ```bash
 # Create namespace in ICR
-ibmcloud cr namespace-add bob-telecom-poc
+ibmcloud cr namespace-add <YOUR_REGISTRY_NAMESPACE>
 
 # Log Docker into ICR
 ibmcloud cr login
 
 # Build image from bobCode directory
-docker build -t icr.io/bob-telecom-poc/bob-backend:v1 ./bobCode
+docker build -t icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-backend:v1 ./bobCode
+
+# Tag for regional registry if applicable
+docker tag icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-backend:v1 us.icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-backend:v1
 
 # Push image to registry
-docker push icr.io/bob-telecom-poc/bob-backend:v1
+docker push us.icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-backend:v1
 ```
 
 ### 2.3 Create Code Engine Project & Deploy App
@@ -138,7 +161,7 @@ ibmcloud ce project select --name bob-telecom-project
 
 # Deploy Container Application
 ibmcloud ce app create --name bob-backend-api \
-  --image icr.io/bob-telecom-poc/bob-backend:v1 \
+  --image us.icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-backend:v1 \
   --port 8000 \
   --min-scale 1 \
   --max-scale 3 \
@@ -167,66 +190,27 @@ Store the following secrets in **IBM Cloud Secrets Manager**:
 ### 3.2 Create Code Engine Secret Bindings
 ```bash
 ibmcloud ce secret create --name telecom-backend-secrets \
-  --from-literal WATSONX_API_KEY="sec_watsonx_key_..." \
-  --from-literal WATSONX_PROJECT_ID="proj_guid_..." \
-  --from-literal NLU_API_KEY="nlu_key_..." \
-  --from-literal CLOUDANT_URL="https://xxx-bluemix.cloudantnosqldb.appdomain.cloud" \
-  --from-literal CLOUDANT_API_KEY="cloudant_key_..." \
-  --from-literal BACKEND_API_KEY="bob_hackathon_sec_key_2026" \
+  --from-literal WATSONX_API_KEY="<YOUR_WATSONX_API_KEY>" \
+  --from-literal WATSONX_PROJECT_ID="<YOUR_WATSONX_PROJECT_ID>" \
+  --from-literal NLU_API_KEY="<YOUR_NLU_API_KEY>" \
+  --from-literal CLOUDANT_URL="https://<YOUR_CLOUDANT_INSTANCE>.cloudantnosqldb.appdomain.cloud" \
+  --from-literal CLOUDANT_API_KEY="<YOUR_CLOUDANT_API_KEY>" \
+  --from-literal BACKEND_API_KEY="<YOUR_BACKEND_API_KEY>" \
   --from-literal USE_MOCK="false"
-```
-
-### 3.3 Backend Secret Consumption & Header Validation
-
-In `bobCode/core/config.py`:
-```python
-from pydantic_settings import BaseSettings
-
-class Settings(BaseSettings):
-    watsonx_api_key: str
-    watsonx_project_id: str
-    nlu_api_key: str
-    cloudant_url: str
-    cloudant_api_key: str
-    backend_api_key: str
-    use_mock: bool = False
-
-    class Config:
-        env_file = ".env"
-        extra = "ignore"
-
-settings = Settings()
-```
-
-In `bobCode/core/guardrails.py` (Header verification):
-```python
-from fastapi import Header, HTTPException
-
-async def verify_orchestrate_key(x_api_key: str = Header(...)):
-    if x_api_key != settings.backend_api_key:
-        raise HTTPException(status_code=401, detail="Unauthorized Skill Invocation")
 ```
 
 ---
 
 ## Step 4: Import OpenAPI Spec into watsonx Orchestrate
 
-1. Log into **watsonx Orchestrate Console**.
+1. Log into **watsonx Orchestrate Console** (`ca-tor.watson-orchestrate.cloud.ibm.com`).
 2. Navigate to **Skill Studio** → **Add skill** → **From OpenAPI document**.
-3. Upload `bobCode/openapi/skills_spec.json` (or point to `https://bob-backend-api.xxx.codeengine.appdomain.cloud/openapi.json`).
-4. Verify the 7 agent skills are parsed:
-   - `intent_agent` (`POST /agents/intent`)
-   - `ticket_agent` (`POST /agents/ticket`)
-   - `rca_agent` (`POST /agents/rca`)
-   - `escalation_agent` (`POST /agents/escalation`)
-   - `parallel_agent` (`POST /agents/parallel`)
-   - `resolution_agent` (`POST /agents/resolution`)
-   - `feedback_agent` (`POST /agents/feedback`)
-   - `watson_orchestrate_webhook` (`POST /webhook/orchestrate`)
+3. Upload `bobCode/openapi/skills_spec.json`.
+4. Verify the 7 agent skills are parsed.
 5. Under **Connection Manager**, configure:
-   - Base URL: `https://bob-backend-api.xxx.codeengine.appdomain.cloud`
+   - Base URL: `https://bob-backend-api.<region>.codeengine.appdomain.cloud`
    - Header Key: `x-api-key`
-   - Header Value: `bob_hackathon_sec_key_2026`
+   - Header Value: `<YOUR_BACKEND_API_KEY>`
 
 ---
 
@@ -234,93 +218,20 @@ async def verify_orchestrate_key(x_api_key: str = Header(...)):
 
 1. Navigate to **Agents** → **Create Agent**.
 2. **Agent Name**: `Telecom Outage Resolution BOB`
-3. **Agent Description**: `Autonomous 7-agent pipeline for resolving telecom network outages.`
-4. **System Instructions / Prompt**:
-   > *"You are an expert Telecom Outage Resolution Master Agent. Upon receiving a customer outage report, execute the incident resolution workflow by orchestrating the Intent Recognition, Ticket Classification, Root Cause Analysis (Vector DB RAG), Escalation Assessment, Parallel Impact Analysis, Resolution Generation, and Feedback skills."*
-5. **Attach Skills**: Select all 7 imported skills.
-6. Publish Agent.
+3. **Attach Skills**: Select all 7 imported skills.
+4. Publish Agent.
 
 ---
 
-## Step 6: IBM BOB Automation Workflow Setup
+## Step 6: React 19 + Vite 8 + TypeScript Frontend Deployment
 
-Configure IBM BOB to record ticket creations automatically upon skill execution:
-
-1. Open **IBM BOB** workspace.
-2. Create workflow: `Telecom Outage Ticket Write`.
-3. Set trigger: **watsonx Orchestrate skill completion** (`watson_orchestrate_webhook`).
-4. Action: **Cloudant Document Write**:
-   - Database: `tickets`
-   - Document Schema: Maps skill output to `BOBTicketDocument`.
-   - URL & API Key: Configured via `CLOUDANT_URL` and `CLOUDANT_API_KEY`.
-
----
-
-## Step 7: React 19 + Vite 8 + TypeScript Frontend Deployment
-
-### 7.1 Multi-Stage `frontend/Dockerfile`
-```dockerfile
-# Stage 1: Build React 19 App
-FROM node:22-alpine AS build
-
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-ENV VITE_API_URL=https://bob-backend-api.xxx.codeengine.appdomain.cloud
-RUN npm run build
-
-# Stage 2: Serve via NGINX
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-### 7.2 `frontend/nginx.conf`
-```nginx
-server {
-    listen 80;
-    server_name localhost;
-
-    location / {
-        root /usr/share/nginx/html;
-        index index.html;
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-### 7.3 Deploy Frontend to Code Engine
+### 6.1 Deploy Frontend to Code Engine
 ```bash
-docker build -t icr.io/bob-telecom-poc/bob-frontend:v1 ./frontend
-docker push icr.io/bob-telecom-poc/bob-frontend:v1
+docker build -t icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-frontend:v1 ./frontend
+docker tag icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-frontend:v1 us.icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-frontend:v1
+docker push us.icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-frontend:v1
 
 ibmcloud ce app create --name bob-frontend-ui \
-  --image icr.io/bob-telecom-poc/bob-frontend:v1 \
-  --port 80 \
-  --min-scale 1 \
-  --max-scale 2
+  --image us.icr.io/<YOUR_REGISTRY_NAMESPACE>/bob-frontend:v1 \
+  --port 80
 ```
-
----
-
-## Step 8: Multi-Agent Deployment & Verification Checklist
-
-| Phase | Verification Command / Step | Expected Result |
-|---|---|---|
-| **Backend Health** | `curl -f https://bob-backend-api.xxx.codeengine.appdomain.cloud/health` | `{"status": "healthy"}` (200 OK) |
-| **OpenAPI Spec** | `curl https://bob-backend-api.xxx.codeengine.appdomain.cloud/openapi.json` | Valid OpenAPI 3.0 JSON with 7 agent paths |
-| **Header Security** | `curl -X POST https://bob-backend-api.../agents/intent` (no key) | `401 Unauthorized` |
-| **Skill Authorization**| `curl -H "x-api-key: bob_hackathon_sec_key_2026" -X POST .../agents/intent` | `200 OK` with intent JSON |
-| **Vector DB RAG** | Invoke `rca_agent` skill via Orchestrate test console | Root cause returned with confidence score from ChromaDB |
-| **Cloudant Audit** | Query Cloudant `audit_trail` database | Sanitised audit record present (no raw PII) |
-| **Frontend UI** | Open `https://bob-frontend-ui.xxx.codeengine.appdomain.cloud` | React 19 UI loads, connects to backend & webchat |
-
----
-
-**Guide Document Created**: 2026-07-23  
-**Location**: `mydocs/ibm-cloud-deployment-guide.md`
