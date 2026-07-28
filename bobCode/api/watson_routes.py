@@ -108,6 +108,7 @@ class BOBTicketDocument(BaseModel):
 async def watson_orchestrate_webhook(
     request: WatsonSkillRequest,
     authorization: Optional[str] = Header(default=None),
+    x_api_key: Optional[str] = Header(default=None, alias="x-api-key"),
 ) -> WatsonSkillResponse:
     """
     Watson Orchestrate skill webhook.
@@ -117,12 +118,18 @@ async def watson_orchestrate_webhook(
     """
     settings = get_settings()
 
-    # ── API key validation (non-empty Authorization header required) ──────────
+    # ── API key validation (Authorization or x-api-key header check) ──────────
     if not settings.use_mock:
-        if not authorization or not authorization.startswith("Bearer "):
+        authorized = False
+        if authorization and (authorization.startswith("Bearer ") or (settings.backend_api_key and authorization == settings.backend_api_key)):
+            authorized = True
+        elif x_api_key and (not settings.backend_api_key or x_api_key == settings.backend_api_key):
+            authorized = True
+        
+        if not authorized:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Missing or invalid Authorization header",
+                detail="Missing or invalid Authorization / x-api-key header",
             )
 
     # ── Run the orchestration pipeline ───────────────────────────────────────

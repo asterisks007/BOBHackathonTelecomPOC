@@ -5,12 +5,6 @@
     "description": "7-agent agentic AI system for telecom outage resolution. IBM BOB Hackathon 2026 POC.",
     "version": "0.1.0"
   },
-  "servers": [
-    {
-      "url": "https://chubby-kiwis-burn.loca.lt",
-      "description": "FastAPI Agent Backend Server"
-    }
-  ],
   "paths": {
     "/orchestrate": {
       "post": {
@@ -404,6 +398,22 @@
                 }
               ],
               "title": "Authorization"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
             }
           }
         ],
@@ -1151,6 +1161,25 @@
         "title": "WatsonSkillResponse",
         "description": "Response returned to Watson Orchestrate after skill execution."
       }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "BearerAuth": []
+    }
+  ]
 }

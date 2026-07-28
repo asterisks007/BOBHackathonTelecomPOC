@@ -136,11 +136,3 @@ Sensitive API credentials, `.env` files, virtual environments, and database stor
 - `.bobignore` (prevents BOB CLI/tooling from uploading environment secrets or build artifacts)
 
 ---
-
-## Complete Project Architecture & Documentation Links
-
-- 📄 **Project Description & Hackathon Vision (<500 words)**: [mydocs/project-description.md](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/project-description.md)
-- 📄 **Option 2 Guide**: [mydocs/option-2-local-laptop-ngrok-watsonx-orchestrate-guide.md](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/option-2-local-laptop-ngrok-watsonx-orchestrate-guide.md)
-- 📄 **Option 1 Guide (Code Engine)**: [mydocs/option-1-ibm-code-engine-deployment.md](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/option-1-ibm-code-engine-deployment.md)
-- 📄 **IBM Cloud Master Deployment Guide**: [mydocs/ibm-cloud-deployment-guide.md](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/ibm-cloud-deployment-guide.md)
-- 📄 **Interactive Visual Simulator**: [mydocs/how-to-use.html](file:///c:/tridibs/mylearning/BOBHackathonTelecomPOC/mydocs/how-to-use.html)

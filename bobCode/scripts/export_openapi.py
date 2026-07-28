@@ -9,9 +9,26 @@ os.environ.setdefault("USE_MOCK", "true")
 from api.main import app  # noqa: E402
 
 spec = app.openapi()
+spec["security"] = [
+    {"ApiKeyAuth": []},
+    {"BearerAuth": []}
+]
+spec.setdefault("components", {})["securitySchemes"] = {
+    "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+    },
+    "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+    }
+}
+
 out_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "openapi", "skills_spec.json")
 with open(out_path, "w", encoding="utf-8") as f:
     json.dump(spec, f, indent=2)
 
 path_count = len(spec.get("paths", {}))
+
 print(f"Exported {path_count} API paths to openapi/skills_spec.json")

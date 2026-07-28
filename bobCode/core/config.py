@@ -47,9 +47,10 @@ class Settings(BaseSettings):
     cloudant_db_audit: str = Field(default="audit_trail")
     cloudant_db_knowledge: str = Field(default="knowledge_base")
 
-    # ── Watson Orchestrate ────────────────────────────────────────────────────
+    # ── Watson Orchestrate & Webhook Security ───────────────────────────
     watson_orchestrate_url: str = Field(default="")
     watson_orchestrate_api_key: str = Field(default="")
+    backend_api_key: str = Field(default="")
 
     # ── ChromaDB (local) ──────────────────────────────────────────────────────
     chroma_persist_dir: str = Field(default="./chroma_data")
