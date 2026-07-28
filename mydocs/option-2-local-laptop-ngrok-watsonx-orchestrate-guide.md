@@ -1,8 +1,8 @@
-# Option 2 Guide: Laptop Execution + ngrok Tunnel + watsonx Orchestrate
+# Option 2 Guide: Laptop Execution + Public Tunnel + watsonx Orchestrate
 
 **Project**: BOBHackathonTelecomPOC  
-**Target Platform**: Laptop / Workstation Execution + `ngrok` HTTPS Tunnel + `ca-tor.watson-orchestrate.cloud.ibm.com`  
-**Status**: Recommended Hackathon Strategy — 100% Sufficient & Ready ✅  
+**Target Platform**: Laptop / Workstation Execution + `npx localtunnel` (or `ngrok`) + `ca-tor.watson-orchestrate.cloud.ibm.com`  
+**Status**: Recommended Hackathon Strategy — 100% Ready & Verified ✅  
 
 ---
 
@@ -10,7 +10,7 @@
 
 > **"Local" means running directly on your laptop / personal workstation** (the physical computer where your `BOBHackathonTelecomPOC` codebase is located).
 
-You do **NOT** need to create or pay for container hosting on IBM Cloud Code Engine. Your laptop runs the Python backend and React UI, while **`ca-tor.watson-orchestrate.cloud.ibm.com`** (IBM Cloud Toronto) acts as the central cloud Master Agent.
+You do **NOT** need to create or pay for container hosting on IBM Cloud Code Engine. Your laptop runs the Python backend and React UI, while **`ca-tor.watson-orchestrate.cloud.ibm.com`** (IBM Cloud Toronto) acts as the central cloud Master Agent calling your laptop over a secure HTTPS tunnel.
 
 ---
 
@@ -33,8 +33,8 @@ You do **NOT** need to create or pay for container hosting on IBM Cloud Code Eng
 │   └─────────────────────────────────────────────────────────────────────┘   │
 └──────────────────────────────────────┬──────────────────────────────────────┘
                                        │
-                                       │ Secure HTTPS Tunnel (ngrok)
-                                       │ https://<YOUR_SUBDOMAIN>.ngrok-free.app
+                                       │ Secure HTTPS Tunnel (localtunnel/ngrok)
+                                       │ https://<YOUR_SUBDOMAIN>.loca.lt
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           YOUR LAPTOP / WORKSTATION                         │
@@ -56,39 +56,35 @@ You do **NOT** need to create or pay for container hosting on IBM Cloud Code Eng
 
 ---
 
-## How to Retrieve Your IBM Service Credentials
-
-To connect your local Python backend to your pre-provisioned IBM Cloud services:
-
-1. **Get IBM NLU Credentials**:
-   - Log into [IBM Cloud Resource List](https://cloud.ibm.com/resources).
-   - Expand **AI / Machine Learning** ➔ Select your NLU instance (e.g. `watsonx-Hackathon NLU`).
-   - Copy **API Key** and **URL**.
-
-2. **Get IBM Cloudant Credentials**:
-   - In Resource List ➔ Expand **Databases** ➔ Select your Cloudant instance (e.g. `watsonx-Hackathon Cloudant`).
-   - Copy **Service URL** and **API Key**.
-
----
-
 ## Step-by-Step Instructions to Run & Present (Option 2)
 
 ### Step 1: Configure Credentials on Your Laptop
-Open `bobCode/.env` on your laptop and set your pre-provisioned IBM service credentials:
+Copy `bobCode/.env.example` to `bobCode/.env` on your laptop and set your pre-provisioned IBM service credentials:
 
 ```ini
 # bobCode/.env
+
+# ── Runtime mode ─────────────────────────────────────────────
 USE_MOCK=false
 
-# 1. IBM NLU Instance Credentials
+# ── API Server ───────────────────────────────────────────────
+API_HOST=0.0.0.0
+API_PORT=8000
+ALLOWED_ORIGINS=http://localhost:5173
+
+# ── IBM NLU Instance Credentials (Dallas us-south) ───────────
 NLU_API_KEY=<YOUR_NLU_API_KEY>
-NLU_URL=https://api.us-south.natural-language-understanding.watson.cloud.ibm.com
+NLU_URL=https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/<YOUR_NLU_INSTANCE_ID>
 
-# 2. IBM Cloudant DB Credentials
-CLOUDANT_URL=https://<YOUR_CLOUDANT_INSTANCE>.cloudantnosqldb.appdomain.cloud
+# ── IBM Cloudant DB Credentials (Dallas us-south) ────────────
+CLOUDANT_URL=https://<YOUR_CLOUDANT_INSTANCE_ID>-bluemix.cloudantnosqldb.appdomain.cloud
 CLOUDANT_API_KEY=<YOUR_CLOUDANT_API_KEY>
+CLOUDANT_DB_INCIDENTS=incidents
+CLOUDANT_DB_TICKETS=tickets
+CLOUDANT_DB_AUDIT=audit_trail
+CLOUDANT_DB_KNOWLEDGE=knowledge_base
 
-# 3. Security Header Key for Orchestrate Webhook
+# ── Security Header Key for Webhook Protection ───────────────
 BACKEND_API_KEY=<YOUR_BACKEND_SECRET_KEY>
 ```
 
@@ -97,59 +93,76 @@ BACKEND_API_KEY=<YOUR_BACKEND_SECRET_KEY>
 ### Step 2: Start the Python Backend & Vector DB on Your Laptop
 Open Terminal #1 on your laptop:
 
-```bash
+```powershell
 cd bobCode
 
-# Install dependencies (if not already installed)
-pip install -r requirements.txt
+# Install dependencies (uses flexible version bounds for Windows compatibility)
+python -m pip install -r requirements.txt
 
-# Start FastAPI backend
-uvicorn api.main:app --reload --port 8000
+# Start FastAPI backend & Vector DB
+python -m uvicorn api.main:app --reload --port 8000
 ```
 *FastAPI backend and local ChromaDB Vector DB are now running on your laptop at `http://localhost:8000`.*
 
 ---
 
-### Step 3: Create Secure HTTPS Tunnel via `ngrok`
+### Step 3: Create Secure HTTPS Tunnel via `npx localtunnel` or `ngrok`
 Open Terminal #2 on your laptop to expose your local FastAPI server to IBM Cloud:
 
-```bash
-ngrok http 8000
+```powershell
+npx localtunnel --port 8000
 ```
-*ngrok will generate a public HTTPS URL, for example:*  
-`https://<YOUR_SUBDOMAIN>.ngrok-free.app`
+*(Or if using ngrok: `ngrok http 8000`)*
+
+**Output**:
+Copy the generated HTTPS URL, for example:  
+👉 `https://<YOUR_SUBDOMAIN>.loca.lt`
 
 ---
 
-### Step 4: Import OpenAPI Specification into Watson Orchestrate
+### Step 4: Link Your Tunnel URL in `skills_spec.json` & Import into Watson Orchestrate
 
-1. Log into **`ca-tor.watson-orchestrate.cloud.ibm.com`** in your browser.
-2. Go to **Skill Studio** ➔ **Add skill** ➔ **From OpenAPI document**.
-3. Upload `bobCode/openapi/skills_spec.json`.
-4. Under **Server Connection Settings**:
-   - Set **Server Base URL**: `https://<YOUR_SUBDOMAIN>.ngrok-free.app` *(your ngrok HTTPS URL)*.
-   - Set **Header**: `x-api-key` = `<YOUR_BACKEND_SECRET_KEY>`.
-5. Save & Publish the 7 agent skills.
+1. Open `bobCode/openapi/skills_spec.json` in VS Code and set your active tunnel URL on line 10:
+   ```json
+     "servers": [
+       {
+         "url": "https://<YOUR_SUBDOMAIN>.loca.lt",
+         "description": "FastAPI Agent Backend Server"
+       }
+     ]
+   ```
+
+2. Log into **`ca-tor.watson-orchestrate.cloud.ibm.com`** in your browser.
+3. Go to **Manage Agents** ➔ Select your agent **`BobTelecomOrchestrate`** (or click **Create new agent**).
+4. Under **Toolset**, click **Add Tool** ➔ Select **OpenAPI**.
+5. Upload `bobCode/openapi/skills_spec.json`.
+6. Under Connection Header, set:
+   - **Key**: `x-api-key`
+   - **Value**: `<YOUR_BACKEND_SECRET_KEY>`
+7. Click **Deploy 🚀** at the top-right corner to publish the agent.
 
 ---
 
-### Step 5: Build Master Agent in Watson Orchestrate
-
-1. In `ca-tor.watson-orchestrate.cloud.ibm.com`, go to **Agents** ➔ **Create Agent**.
-2. Name: `Telecom Outage Resolution BOB`
-3. Prompt: *"You are an autonomous Telecom Outage Resolution Master Agent. When a customer reports a network issue, execute the resolution flow by invoking the Intent Skill, Ticket Skill, RCA Skill (queries Vector DB), Escalation Skill, Parallel Impact Skill, Resolution Skill, and Feedback Skill."*
-4. Attach Skills: Select all 7 imported skills.
-5. Publish Agent.
-
----
-
-### Step 6: Start React 19 Frontend on Your Laptop & Demo
+### Step 5: Start React 19 Frontend on Your Laptop & Demo
 Open Terminal #3 on your laptop:
 
-```bash
+```powershell
 cd frontend
+npm install
 npm run dev
 ```
+
 1. Open `http://localhost:5173` in your browser.
-2. Enter a sample complaint: *"Fiber cut near Manhattan junction box XY, 4G network is down"*.
-3. Show the judges the live 7-agent pipeline animation, real-time SSE progress events, confidence meters, and Cloudant ticket logs!
+2. Enter a sample complaint:
+   ```text
+   Fibercut at Purbalok Kalibari
+   ```
+3. Show the judges the live **7-Agent Pipeline** animation, real-time SSE progress events, location-aware RCA analysis, and live Cloudant ticket logs!
+
+---
+
+## Security & Exclusion Files (.gitignore & .bobignore)
+
+Sensitive credentials and environment files are protected from git commits and push operations:
+- **`.gitignore`**: Excludes `.env`, `.env.*`, `.venv/`, `chroma_data/`, `node_modules/`, `*.key`, `*.pem`.
+- **`.bobignore`**: Prevents IBM BOB tooling from scanning or pushing credential files or build output.

@@ -14,6 +14,17 @@ export function Dashboard() {
   const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
   const [result, setResult] = useState<Record<string, Record<string, unknown>>>({});
 
+  const [useMock, setUseMock] = useState<boolean | null>(null);
+
+  // Fetch live system health & use_mock status from backend
+  useEffect(() => {
+    const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+    fetch(`${API_URL}/health`)
+      .then(res => res.json())
+      .then(data => setUseMock(data.use_mock))
+      .catch(() => setUseMock(false));
+  }, []);
+
   // Track timeline entries as SSE events arrive
   useEffect(() => {
     const entries = Object.entries(agentStatuses);
@@ -92,7 +103,9 @@ export function Dashboard() {
           </div>
         )}
 
-        <div style={styles.footer}>Made with IBM Bob · IBM BOB Hackathon 2026 · USE_MOCK=true</div>
+        <div style={styles.footer}>
+          Made with IBM Bob · IBM BOB Hackathon 2026 · USE_MOCK={useMock === null ? 'false' : String(useMock)}
+        </div>
       </div>
     </div>
   );

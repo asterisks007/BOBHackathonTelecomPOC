@@ -5,6 +5,12 @@
     "description": "7-agent agentic AI system for telecom outage resolution. IBM BOB Hackathon 2026 POC.",
     "version": "0.1.0"
   },
+  "servers": [
+    {
+      "url": "https://chubby-kiwis-burn.loca.lt",
+      "description": "FastAPI Agent Backend Server"
+    }
+  ],
   "paths": {
     "/orchestrate": {
       "post": {

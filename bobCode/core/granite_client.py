@@ -130,12 +130,43 @@ class GraniteClient:
             return self._mock_generate(prompt)
 
     def _mock_generate(self, prompt: str) -> str:
-        """Return a deterministic mock response based on prompt keywords."""
+        """Return a dynamic, location-aware mock response based on prompt keywords and context."""
         prompt_lower = prompt.lower()
-        for keyword, response in _MOCK_RESPONSES.items():
-            if keyword in prompt_lower:
-                return response
-        return _MOCK_RESPONSES["default"]
+        
+        # Extract location from prompt if present (e.g., "at Purbalok Kalibari")
+        location_str = "the affected area"
+        if " at " in prompt:
+            try:
+                location_str = prompt.split(" at ")[1].split(".")[0].strip()
+            except Exception:
+                pass
+
+        if "fiber" in prompt_lower or "fibercut" in prompt_lower or "cut" in prompt_lower:
+            return (
+                f"Root cause identified for {location_str}: Physical fiber cable cut near local distribution junction box. "
+                f"Backup microwave link activated automatically. Recommend dispatching emergency optical splice crew. "
+                f"Estimated restoration time: 60-90 minutes."
+            )
+        elif "signal" in prompt_lower or "degradation" in prompt_lower or "4g" in prompt_lower:
+            return (
+                f"Root cause identified for {location_str}: Signal degradation consistent with antenna misalignment or "
+                f"localized RF interference. Recommend remote antenna tilt adjustment followed by field inspection."
+            )
+        elif "5g" in prompt_lower:
+            return (
+                f"Root cause identified for {location_str}: 5G mmWave backhaul link degraded due to atmospheric attenuation. "
+                f"Temporary fallback to 4G LTE enabled for affected users in {location_str}."
+            )
+        elif "billing" in prompt_lower:
+            return (
+                f"Root cause identified: Billing system database connection pool exhausted for {location_str} accounts. "
+                f"Recommend scaling connection pool and queue-based rate limiting."
+            )
+        
+        return (
+            f"Analysis complete for {location_str}. Physical network anomaly detected. "
+            f"Recommend L2 network operations field dispatch. Estimated MTTR: 45 minutes."
+        )
 
     @classmethod
     def get_real_call_count(cls) -> int:

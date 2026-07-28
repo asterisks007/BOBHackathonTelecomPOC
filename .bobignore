@@ -1,0 +1,45 @@
+# ============================================================
+# IBM BOB Exclusions — BOBHackathonTelecomPOC
+# ============================================================
+
+# ── Environment & Security Secrets ───────────────────────────
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+!.env.example
+*.pem
+*.key
+*.cert
+secrets.json
+
+# ── Python & Virtual Environments ─────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# ── Node & Frontend Builds ────────────────────────────────────
+node_modules/
+dist/
+.vite/
+
+# ── Vector DB & Database Storage ──────────────────────────────
+chroma_data/
+data/chroma_db/
+*.db
+*.sqlite
+
+# ── IDE & Operating System ────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
