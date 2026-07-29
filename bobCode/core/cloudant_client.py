@@ -59,7 +59,8 @@ class CloudantClient:
         """
         if "_id" not in document:
             document["_id"] = str(uuid.uuid4())
-        document["_created_at"] = datetime.now(timezone.utc).isoformat()
+        if "created_at" not in document:
+            document["created_at"] = datetime.now(timezone.utc).isoformat()
 
         if self.use_mock:
             _MOCK_STORE.setdefault(db_name, {})[document["_id"]] = document
